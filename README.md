@@ -2,6 +2,13 @@
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
+## Pre req
+* Java 11
+* MySQL 8.0.21 TIp you can use docker with this command: 
+    * `docker run --name=mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=passwd -e MYSQL_DATABASE=temaula -d mysql`
+* Maven
+
+
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
 ## Running the application in dev mode
