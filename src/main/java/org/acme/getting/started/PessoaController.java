@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -57,13 +58,20 @@ public class PessoaController {
     }
 
     @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
     @Transactional
     public Response atualizar(@PathParam("id") Long id, Pessoa pessoa) {
         pessoa.setId(id);
+
+        Optional<Pessoa> pessoaOp = repository.findByIdOptional(id);
+		if (pessoaOp.isEmpty()) {
+			throw new NotFoundException("Pessoa não existe");
+		}
         repository.persist(pessoa);
-        return Response.status(202).build();
+        //pessoa.persist();
+        
+        return Response.status(202).entity(pessoa).build();
     }
 
 
