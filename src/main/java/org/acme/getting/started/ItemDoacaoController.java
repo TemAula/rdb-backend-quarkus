@@ -16,13 +16,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
-@Path("/pessoas")
+@Path("/itens")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class PessoaController {
+public class ItemDoacaoController {
 
     @Inject
-    private PessoaRepository repository;
+    private ItemDoacaoRepository repository;
 
     @GET
     @Path("/")
@@ -34,18 +34,18 @@ public class PessoaController {
     @GET
     @Path("/{id}")
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Pessoa pesquisarId(@PathParam("id") Long id) {
-        Optional<Pessoa> pessoa = repository.findByIdOptional(id);
-        return pessoa
+    public ItemDoacao pesquisarId(@PathParam("id") Long id) {
+        Optional<ItemDoacao> itemDoacao = repository.findByIdOptional(id);
+        return itemDoacao
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response inserir(Pessoa pessoa) {
-        repository.persist(pessoa);
-        return Response.status(201).entity(pessoa).build();
+    public Response inserir(ItemDoacao itemDoacao) {
+        repository.persist(itemDoacao);
+        return Response.status(201).entity(itemDoacao).build();
     }
 
     @DELETE
@@ -61,16 +61,16 @@ public class PessoaController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Path("/{id}")
     @Transactional
-    public Response atualizar(@PathParam("id") Long id, Pessoa pessoa) {
-        pessoa.setId(id);
+    public Response atualizar(@PathParam("id") Long id, ItemDoacao itemDoacao) {
+        itemDoacao.setId(id);
 
-        Optional<Pessoa> pessoaOp = repository.findByIdOptional(id);
-		if (pessoaOp.isEmpty()) {
-			throw new NotFoundException("Pessoa não existe");
+        Optional<ItemDoacao> itemDoacaoOp = repository.findByIdOptional(id);
+		if (itemDoacaoOp.isEmpty()) {
+			throw new NotFoundException("ItemDoacao não existe");
 		}
-        repository.persist(pessoa);
+        repository.persist(itemDoacao);
         
-        return Response.status(202).entity(pessoa).build();
+        return Response.status(202).entity(itemDoacao).build();
     }
 
 
