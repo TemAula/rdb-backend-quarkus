@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.temaula.rueidodobem.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -29,6 +29,8 @@ public class Pessoa implements Serializable {
 
     @Column(length = 16, nullable = false)
     private String senha;
+    
+    private Endereco endereco2;
 
     public Long getId() {
         return id;
