@@ -1,7 +1,7 @@
 package org.acme.getting.started;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity(name="item_doacao")
 public class ItemDoacao implements Serializable
@@ -27,8 +25,9 @@ public class ItemDoacao implements Serializable
     private double valorReferencia;
     private boolean ativo;
 
-    @Temporal(TemporalType.DATE)
-    private Date dataCriacao;
+   // @Temporal(TemporalType.DATE)
+   // @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime dataCriacao;
 
     @OneToOne(cascade=CascadeType.ALL)
     private Pessoa autor;
@@ -42,7 +41,7 @@ public class ItemDoacao implements Serializable
         CategoriaItem categoria,
         String nome,
         double valorReferencia,
-        Date dataCriacao,
+        LocalDateTime dataCriacao,
         Pessoa autor){
         this.setId(id);
         this.setCategoria(categoria);
@@ -88,26 +87,31 @@ public class ItemDoacao implements Serializable
         return ativo;
     }
 
-    private void setAtivo(boolean ativo) {
+    public boolean getAtivo(){
+        return this.ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
 
     public void ativa(){
         setAtivo(true);
+        
     }
 
     public void desativa(){
         setAtivo(false);
     }
 
-    public Date getDataCriacao() {
+    public LocalDateTime getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(Date dataCriacao) {
-        if(dataCriacao.equals(null)){
-          new Date(System.currentTimeMillis());
-        }
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+     //   if(dataCriacao.equals(null)){
+     //       setDataCriacao(LocalDateTime.now());
+     //   }
         this.dataCriacao = dataCriacao;
     }
 

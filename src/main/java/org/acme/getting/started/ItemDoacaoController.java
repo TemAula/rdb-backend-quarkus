@@ -5,7 +5,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -45,7 +44,7 @@ public class ItemDoacaoController {
     @Transactional
     public Response inserir(ItemDoacao itemDoacao) {
         repository.persist(itemDoacao);
-        return Response.status(201).entity(itemDoacao).build();
+        return Response.status(Response.Status.CREATED).entity(itemDoacao).build();
     }
 
     @DELETE
@@ -54,7 +53,7 @@ public class ItemDoacaoController {
     @Transactional
     public Response deletar(@PathParam("id") Long id) {
         repository.deleteById(id);
-        return Response.status(202).build();
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 
     @PUT
@@ -62,16 +61,23 @@ public class ItemDoacaoController {
     @Path("/{id}")
     @Transactional
     public Response atualizar(@PathParam("id") Long id, ItemDoacao itemDoacao) {
-        itemDoacao.setId(id);
-
-        Optional<ItemDoacao> itemDoacaoOp = repository.findByIdOptional(id);
-		if (itemDoacaoOp.isEmpty()) {
-			throw new NotFoundException("ItemDoacao não existe");
-		}
-        repository.persist(itemDoacao);
+        ItemDoacao itemDoacaoNovo = repository.findById(id);
+		if (itemDoacaoNovo == null){
+			return Response.status(Response.Status.NOT_FOUND).entity("Item de doacao não existe").type(MediaType.TEXT_PLAIN).build();
+		} else{
+            
+            
+       // itemDoacaoNovo.setAutor(itemDoacao.getAutor());
+       // itemDoacaoNovo.setCategoria(itemDoacao.getCategoria());
+      //  itemDoacaoNovo.setDataCriacao(itemDoacao.getDataCriacao());
+        itemDoacaoNovo.setNome(itemDoacao.getNome());
+        itemDoacaoNovo.setValorReferencia(itemDoacao.getValorReferencia());
+        itemDoacaoNovo.setAtivo(itemDoacao.getAtivo());
         
-        return Response.status(202).entity(itemDoacao).build();
-    }
+        repository.persist(itemDoacaoNovo);
+   
+        return Response.status(Response.Status.ACCEPTED).entity(itemDoacaoNovo).build();
+    }}
 
 
 }

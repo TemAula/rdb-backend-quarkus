@@ -1,11 +1,12 @@
 package org.acme.getting.started;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -14,7 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 
 @Path("/pessoas")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -45,7 +45,7 @@ public class PessoaController {
     @Transactional
     public Response inserir(Pessoa pessoa) {
         repository.persist(pessoa);
-        return Response.status(201).entity(pessoa).build();
+        return Response.status(Response.Status.CREATED).entity(pessoa).build();
     }
 
     @DELETE
@@ -54,7 +54,7 @@ public class PessoaController {
     @Transactional
     public Response deletar(@PathParam("id") Long id) {
         repository.deleteById(id);
-        return Response.status(202).build();
+        return Response.status(Response.Status.ACCEPTED).build();
     }
 
     @PUT
@@ -64,7 +64,7 @@ public class PessoaController {
     public Response atualizar(@PathParam("id") Long id, Pessoa pessoa) {
         Pessoa pessoaNova = repository.findById(id);
 		if (pessoaNova == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Pessoa não existe").build();
+			return Response.status(Response.Status.NOT_FOUND).entity("Pessoa não existe").type(MediaType.TEXT_PLAIN).build();
 		} else{
 
         pessoaNova.setSenha(pessoa.getSenha());
@@ -74,7 +74,7 @@ public class PessoaController {
         
         repository.persist(pessoaNova);
    
-        return Response.status(Response.Status.OK).entity(pessoaNova).build();
+        return Response.status(Response.Status.ACCEPTED).entity(pessoaNova).build();
     }}
 
 
