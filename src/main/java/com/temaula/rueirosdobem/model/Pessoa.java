@@ -8,13 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-//@Table(name = "pessoa")
+@Table(name = "tbl_pessoa")
 public class Pessoa implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pessoa_id")
     private Long id;
 
     @Column(length = 32, nullable = false)

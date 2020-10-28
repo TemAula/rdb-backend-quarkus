@@ -1,5 +1,7 @@
 package org.acme.getting.started;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -14,11 +16,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
+
+import com.temaula.rueirosdobem.model.ItemDoacao;
 
 @Path("/itens")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
 public class ItemDoacaoController {
 
     @Inject

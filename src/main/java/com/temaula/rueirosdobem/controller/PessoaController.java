@@ -15,7 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.temaula.rueidodobem.model.Pessoa;
+import com.temaula.rueirosdobem.model.Pessoa;
 import com.temaula.rueirosdobem.repository.PessoaRepository;
 
 import java.util.Optional;

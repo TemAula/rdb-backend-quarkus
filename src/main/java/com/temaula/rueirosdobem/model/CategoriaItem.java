@@ -1,4 +1,4 @@
-package com.temaula.rueidodobem.model;
+package com.temaula.rueirosdobem.model;
 
 import java.io.Serializable;
 

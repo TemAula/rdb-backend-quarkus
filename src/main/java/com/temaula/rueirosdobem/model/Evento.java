@@ -1,39 +1,45 @@
-package com.temaula.rueidodobem.model;
+package com.temaula.rueirosdobem.model;
 
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tbl_evento")
 public class Evento implements Serializable
 {
 
 	@Id
+	@Column(name = "evento_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String nome;
     private LocalDate dataInicio;
     private LocalDate dataFim;
-    private Timestamp dataCriacao;
+    private LocalDate dataCriacao;
     private boolean ativo;
     private String descricao;
+    
+    @OneToMany(mappedBy = "evento")
     private List<ItemDoacao> itensDoacao;
-    private Pessoa autor;
+   
+    //private Pessoa autor;
     private String urlImagem;
 
     public Evento()
     {
-        this.ativa();
     }
 
-    public Evento(int id, String nome, LocalDate dataInicio, LocalDate dataFim, Timestamp dataCriacao, String descricao, List<ItemDoacao> itensDoacao, Pessoa autor, String urlImagem)
+    public Evento(Long id, String nome, LocalDate dataInicio, LocalDate dataFim, LocalDate dataCriacao, String descricao, List<ItemDoacao> itensDoacao, Pessoa autor, String urlImagem)
     {
         this();
         this.setId(id);
@@ -42,8 +48,8 @@ public class Evento implements Serializable
         this.setDataFim(dataFim);
         this.setDataCriacao(dataCriacao);
         this.setDescricao(descricao);
-        this.setItensDoacao(itensDoacao);
-        this.setAutor(autor);
+//        this.setItensDoacao(itensDoacao);
+        //this.setAutor(autor);
         this.setUrlImagem(urlImagem);
     }
 
@@ -71,11 +77,11 @@ public class Evento implements Serializable
         this.dataFim = dataFim;
     }
 
-    public Timestamp getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(Timestamp dataCriacao) {
+    public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
@@ -113,13 +119,13 @@ public class Evento implements Serializable
         this.itensDoacao = itensDoacao;
     }
 
-    public Pessoa getAutor() {
+    /*public Pessoa getAutor() {
         return autor;
     }
 
     public void setAutor(Pessoa autor) {
         this.autor = autor;
-    }
+    }*/
 
     public String getUrlImagem() {
         return urlImagem;
@@ -129,11 +135,11 @@ public class Evento implements Serializable
         this.urlImagem = urlImagem;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

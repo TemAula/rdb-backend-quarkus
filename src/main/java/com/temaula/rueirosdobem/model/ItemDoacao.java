@@ -1,128 +1,134 @@
-package com.temaula.rueidodobem.model;
+package com.temaula.rueirosdobem.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Entity(name="item_doacao")
-public class ItemDoacao implements Serializable
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//@Entity(name="item_doacao")
+@Entity
+@Table(name = "tbl_item_doacao")
+public class ItemDoacao implements Serializable {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "item_doacao_id")
+	private Long id;
 
-    private CategoriaItem categoria;
+	// private CategoriaItem categoria;
 
-    @Column(length = 32, nullable = false)
-    private String nome;
-    private double valorReferencia;
-    private boolean ativo;
+	@Column(length = 32, nullable = false)
+	private String nome;
+	private double valorReferencia;
+	private boolean ativo;
 
-    @Temporal(TemporalType.DATE)
-    private Date dataCriacao;
+	// @Temporal(TemporalType.DATE)
+	private LocalDate dataCriacao;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    private Pessoa autor;
-   
-    public ItemDoacao(){
-        this.ativa();
-    }
+	// @OneToOne(cascade=CascadeType.ALL)
+	 private Pessoa autor;
 
-    public ItemDoacao(
-        Long id,
-        CategoriaItem categoria,
-        String nome,
-        double valorReferencia,
-        Date dataCriacao,
-        Pessoa autor){
-        this.setId(id);
-        this.setCategoria(categoria);
-        this.setNome(nome);
-        this.setValorReferencia(valorReferencia);
-        this.setDataCriacao(dataCriacao);
-        this.setAutor(autor);
-    }
+	@ManyToOne()
+	@JoinColumn(name = "evento_id")
+	private Evento evento;
 
-    public Long getId() {
-        return id;
-    }
+	public ItemDoacao() {
+		// this.ativa();
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public ItemDoacao(Long id, String nome, double valorReferencia, boolean ativo, LocalDate dataCriacao,
+			Evento evento) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.valorReferencia = valorReferencia;
+		this.ativo = ativo;
+		this.dataCriacao = dataCriacao;
+//		this.evento = evento;
+	}
 
-    public CategoriaItem getCategoria() {
-        return categoria;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setCategoria(CategoriaItem categoria) {
-        this.categoria = categoria;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getNome() {
-        return nome;
-    }
+	/*
+	 * public CategoriaItem getCategoria() { return categoria; }
+	 * 
+	 * public void setCategoria(CategoriaItem categoria) { this.categoria =
+	 * categoria; }
+	 */
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+	public String getNome() {
+		return nome;
+	}
 
-    public double getValorReferencia() {
-        return valorReferencia;
-    }
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public void setValorReferencia(double valorReferencia) {
-        this.valorReferencia = valorReferencia;
-    }
+	public double getValorReferencia() {
+		return valorReferencia;
+	}
 
-    public boolean isAtivo() {
-        return ativo;
-    }
+	public void setValorReferencia(double valorReferencia) {
+		this.valorReferencia = valorReferencia;
+	}
 
-    private void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
+	public boolean isAtivo() {
+		return ativo;
+	}
 
-    public void ativa(){
-        setAtivo(true);
-    }
+	private void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
 
-    public void desativa(){
-        setAtivo(false);
-    }
+	public void ativa() {
+		setAtivo(true);
+	}
 
-    public Date getDataCriacao() {
-        return dataCriacao;
-    }
+	public void desativa() {
+		setAtivo(false);
+	}
 
-    public void setDataCriacao(Date dataCriacao) {
-        if(dataCriacao.equals(null)){
-          new Date(System.currentTimeMillis());
-        }
-        this.dataCriacao = dataCriacao;
-    }
+	public LocalDate getDataCriacao() {
+		return dataCriacao;
+	}
 
-    public Pessoa getAutor() {
-        return autor;
-    }
+	public void setDataCriacao(LocalDate dataCriacao) {
+		if (dataCriacao.equals(null)) {
+			dataCriacao = LocalDate.of(2020, 01, 01);
+		}
+		this.dataCriacao = dataCriacao;
+	}
 
-    public void setAutor(Pessoa autor) {
-        this.autor = autor;
-    }
+	/*
+	 * public Pessoa getAutor() { return autor; }
+	 * 
+	 * public void setAutor(Pessoa autor) { this.autor = autor; }
+	 */
 
-    @Override
-    public String toString() {
-        
-    return "Nome: "+this.nome + ", ativo: "+this.ativo+" pessoa: "+this.autor;
-    }
+	public Evento getEvento() {
+		return evento;
+	}
+
+	public void setEvento(Evento evento) {
+		this.evento = evento;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemDoacao [id=" + id + ", nome=" + nome + ", valorReferencia=" + valorReferencia + ", ativo=" + ativo
+				+ ", dataCriacao=" + dataCriacao + "]"; //, evento=" + evento + "
+	}
 
 }
