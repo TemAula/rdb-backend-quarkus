@@ -1,20 +1,17 @@
-package com.temaula.rueirosdobem.model;
+package org.acme.getting.started;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
 
-//@Entity(name="item_doacao")
 @Entity
-@Table(name = "tbl_item_doacao")
 public class ItemDoacao implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,26 +28,26 @@ public class ItemDoacao implements Serializable {
 	// @Temporal(TemporalType.DATE)
 	private LocalDate dataCriacao;
 
-	// @OneToOne(cascade=CascadeType.ALL)
-	 private Pessoa autor;
+	@OneToMany(mappedBy = "itemDoacao")
+	private List<EventoItemDoacao> eventoItemDoacao;
 
-	@ManyToOne()
-	@JoinColumn(name = "evento_id")
-	private Evento evento;
+//	@ManyToOne
+//	@JoinColumn(name = "evento_item_doacao_id")
+//	private EventoItemDoacao eventoItemDoacao;
 
 	public ItemDoacao() {
-		// this.ativa();
+		// TODO Auto-generated constructor stub
 	}
 
 	public ItemDoacao(Long id, String nome, double valorReferencia, boolean ativo, LocalDate dataCriacao,
-			Evento evento) {
+			List<EventoItemDoacao> eventoItemDoacao) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.valorReferencia = valorReferencia;
 		this.ativo = ativo;
 		this.dataCriacao = dataCriacao;
-//		this.evento = evento;
+		this.eventoItemDoacao = eventoItemDoacao;
 	}
 
 	public Long getId() {
@@ -60,13 +57,6 @@ public class ItemDoacao implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	/*
-	 * public CategoriaItem getCategoria() { return categoria; }
-	 * 
-	 * public void setCategoria(CategoriaItem categoria) { this.categoria =
-	 * categoria; }
-	 */
 
 	public String getNome() {
 		return nome;
@@ -88,16 +78,8 @@ public class ItemDoacao implements Serializable {
 		return ativo;
 	}
 
-	private void setAtivo(boolean ativo) {
+	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
-	}
-
-	public void ativa() {
-		setAtivo(true);
-	}
-
-	public void desativa() {
-		setAtivo(false);
 	}
 
 	public LocalDate getDataCriacao() {
@@ -105,30 +87,14 @@ public class ItemDoacao implements Serializable {
 	}
 
 	public void setDataCriacao(LocalDate dataCriacao) {
-		if (dataCriacao.equals(null)) {
-			dataCriacao = LocalDate.of(2020, 01, 01);
-		}
 		this.dataCriacao = dataCriacao;
 	}
 
-	/*
-	 * public Pessoa getAutor() { return autor; }
-	 * 
-	 * public void setAutor(Pessoa autor) { this.autor = autor; }
-	 */
-
-	public Evento getEvento() {
-		return evento;
+	public List<EventoItemDoacao> getEventoItemDoacao() {
+		return eventoItemDoacao;
 	}
 
-	public void setEvento(Evento evento) {
-		this.evento = evento;
+	public void setEventoItemDoacao(List<EventoItemDoacao> eventoItemDoacao) {
+		this.eventoItemDoacao = eventoItemDoacao;
 	}
-
-	@Override
-	public String toString() {
-		return "ItemDoacao [id=" + id + ", nome=" + nome + ", valorReferencia=" + valorReferencia + ", ativo=" + ativo
-				+ ", dataCriacao=" + dataCriacao + "]"; //, evento=" + evento + "
-	}
-
 }

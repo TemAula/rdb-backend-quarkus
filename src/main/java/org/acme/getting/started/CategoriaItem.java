@@ -1,4 +1,4 @@
-package com.temaula.rueirosdobem.model;
+package org.acme.getting.started;
 
 import java.io.Serializable;
 

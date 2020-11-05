@@ -1,6 +1,7 @@
-package com.temaula.rueirosdobem.controller;
+package org.acme.getting.started;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -14,9 +15,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.temaula.rueirosdobem.model.Evento;
-import com.temaula.rueirosdobem.repository.EventoRepository;
 
 @Path("/eventos")
 @Transactional

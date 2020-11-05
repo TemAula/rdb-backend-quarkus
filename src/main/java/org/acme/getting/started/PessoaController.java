@@ -1,4 +1,4 @@
-package com.temaula.rueirosdobem.controller;
+package org.acme.getting.started;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -14,9 +14,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.temaula.rueirosdobem.model.Pessoa;
-import com.temaula.rueirosdobem.repository.PessoaRepository;
 
 import java.util.Optional;
 

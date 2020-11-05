@@ -17,8 +17,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.temaula.rueirosdobem.model.ItemDoacao;
-
 @Path("/itens")
 public class ItemDoacaoController {
 

@@ -1,4 +1,4 @@
-package com.temaula.rueirosdobem.model;
+package org.acme.getting.started;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tbl_pessoa")
 public class Pessoa implements Serializable {
 
     @Id
