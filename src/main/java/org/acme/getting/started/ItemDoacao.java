@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class ItemDoacao implements Serializable {
 	// @Temporal(TemporalType.DATE)
 	private LocalDate dataCriacao;
 
-	@OneToMany(mappedBy = "itemDoacao")
+	@OneToMany(mappedBy = "itemDoacao", cascade = CascadeType.ALL)
 	private List<EventoItemDoacao> eventoItemDoacao;
 
 //	@ManyToOne
