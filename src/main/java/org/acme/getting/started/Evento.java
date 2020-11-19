@@ -21,7 +21,8 @@ public class Evento implements Serializable {
 	private boolean ativo;
 	private String descricao;
 //    private List<ItemDoacao> itensDoacao;
-//    private Pessoa autor;
+//	private List<Pessoa> autor;
+	
 	private String urlImagem;
 
 	public Evento() {
@@ -98,7 +99,7 @@ public class Evento implements Serializable {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
+	
 	public String getUrlImagem() {
 		return urlImagem;
 	}
