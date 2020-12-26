@@ -2,6 +2,7 @@ package org.acme.getting.started;
 
 import java.io.Serializable;
 import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,7 +31,23 @@ public class Pessoa implements Serializable {
     @Column(length = 16, nullable = false)
     private String senha;
 
-    public Long getId() {
+    public Pessoa() {
+		// TODO Auto-generated constructor stub
+	}
+    
+    
+    public Pessoa(Long id, String nome, String email, String telefone, String endereco, String senha) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.email = email;
+		this.telefone = telefone;
+		this.endereco = endereco;
+		this.senha = senha;
+	}
+
+
+	public Long getId() {
         return id;
     }
 
@@ -78,7 +95,7 @@ public class Pessoa implements Serializable {
         this.senha = senha;
     }
 
-    @Override
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
