@@ -44,7 +44,8 @@ class PessoaControllerTest {
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
-                .as(new TypeRef<List<Pessoa>>() {});
+                .as(new TypeRef<List<Pessoa>>() {
+                });
 
         Assertions.assertFalse(entities.isEmpty());
         Assertions.assertTrue(entities.stream().map(Pessoa::getNome)
@@ -83,6 +84,22 @@ class PessoaControllerTest {
                 .get("/pessoas/{id}", pessoa.getId())
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void shouldUpdate() {
+        Pessoa pessoa = createPerson();
+        pessoa.setNome(faker.dragonBall().character());
+
+        Pessoa pessoaAtualizada = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .body(pessoa)
+                .put("/pessoas/{id}", pessoa.getId())
+                .then()
+                .statusCode(ACCEPTED.getStatusCode())
+                .extract().as(Pessoa.class);
+        Assertions.assertEquals(pessoa, pessoaAtualizada);
     }
 
     private Pessoa createPerson() {
