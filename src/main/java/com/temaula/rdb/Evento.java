@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.temaula.rdb;
 
 import java.io.Serializable;
 import java.time.LocalDate;
