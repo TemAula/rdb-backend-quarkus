@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class CategoriaItem implements Serializable {
 
     private int id;
+
     private String nome;
-    // private String urlIcone; // Se for necessário um ícone para a categoria
 
     public int getId() {
         return id;

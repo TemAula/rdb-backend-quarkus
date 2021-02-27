@@ -31,22 +31,6 @@ public class Pessoa implements Serializable {
     @Column(length = 16, nullable = false)
     private String senha;
 
-    public Pessoa() {
-		// TODO Auto-generated constructor stub
-	}
-    
-    
-    public Pessoa(Long id, String nome, String email, String telefone, String endereco, String senha) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.email = email;
-		this.telefone = telefone;
-		this.endereco = endereco;
-		this.senha = senha;
-	}
-
-
 	public Long getId() {
         return id;
     }
