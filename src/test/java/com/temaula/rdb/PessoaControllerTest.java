@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static javax.ws.rs.core.Response.Status.ACCEPTED;
 import static javax.ws.rs.core.Response.Status.CREATED;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static javax.ws.rs.core.Response.Status.OK;
 
 @QuarkusTest
@@ -63,6 +65,24 @@ class PessoaControllerTest {
                 .extract()
                 .as(Pessoa.class);
         Assertions.assertEquals(pessoa, entity);
+    }
+
+    @Test
+    public void shouldDelete() {
+        Pessoa pessoa = createPerson();
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .delete("/pessoas/{id}", pessoa.getId())
+                .then()
+                .statusCode(ACCEPTED.getStatusCode());
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/pessoas/{id}", pessoa.getId())
+                .then()
+                .statusCode(NOT_FOUND.getStatusCode());
     }
 
     private Pessoa createPerson() {
