@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
 
 @Entity(name = "pessoa")
 public class Pessoa {
@@ -20,6 +21,7 @@ public class Pessoa {
     private String nome;
 
     @Column(length = 32, nullable = false)
+    @Email
     private String email;
 
     @Column(length = 16, nullable = false)
