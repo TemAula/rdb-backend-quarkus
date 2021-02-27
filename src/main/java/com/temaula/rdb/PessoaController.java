@@ -61,23 +61,12 @@ public class PessoaController {
     @Path("/{id}")
     @Transactional
     public Response atualizar(@PathParam("id") Long id, Pessoa pessoa) {
-        Pessoa pessoaNova = repository.findById(id);
-		if (pessoaNova == null){
-			return Response.status(Response.Status.NOT_FOUND).entity("Pessoa não existe").type(MediaType.TEXT_PLAIN).build();
-		} else{
 
-        pessoaNova.setSenha(pessoa.getSenha());
-        pessoaNova.setNome(pessoa.getNome());
-        pessoaNova.setTelefone(pessoa.getTelefone());
-        pessoaNova.setEmail(pessoa.getEmail());
-        
+        Pessoa pessoaNova = repository.findByIdOptional(id)
+                .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+        pessoaNova.atualizar(pessoa);
         repository.persist(pessoaNova);
-   
         return Response.status(Response.Status.ACCEPTED).entity(pessoaNova).build();
-    }}
-
-
-
-
+    }
 
 }

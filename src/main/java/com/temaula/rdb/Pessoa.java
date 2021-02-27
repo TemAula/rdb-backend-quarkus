@@ -81,6 +81,13 @@ public class Pessoa {
         this.senha = senha;
     }
 
+    public void atualizar(Pessoa pessoa) {
+        this.senha = pessoa.getSenha();
+        this.nome = pessoa.getNome();
+        this.telefone = pessoa.getTelefone();
+        this.email = pessoa.getEmail();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,4 +116,5 @@ public class Pessoa {
                 ", senha='" + senha + '\'' +
                 '}';
     }
+
 }
