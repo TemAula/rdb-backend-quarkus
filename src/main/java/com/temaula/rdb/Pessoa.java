@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity(name = "pessoa")
-public class Pessoa implements Serializable {
+public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Pessoa implements Serializable {
     @Column(length = 16, nullable = false)
     private String senha;
 
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -79,7 +79,7 @@ public class Pessoa implements Serializable {
         this.senha = senha;
     }
 
-	@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
