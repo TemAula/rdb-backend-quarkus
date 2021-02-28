@@ -27,12 +27,6 @@ public class Usuario extends PanacheEntity {
     @Roles
     public String role;
 
-    /**
-     * Adds a new user in the database
-     * @param username the user name
-     * @param password the unencrypted password (it will be encrypted with bcrypt)
-     * @param role the comma-separated roles
-     */
     public static void add(String username, String password, String role) {
         Usuario user = new Usuario();
         user.username = username;
