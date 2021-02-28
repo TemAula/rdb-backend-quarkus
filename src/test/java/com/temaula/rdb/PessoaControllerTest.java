@@ -31,6 +31,7 @@ class PessoaControllerTest {
     @Test
     public void shouldInsert() {
         Pessoa pessoa = createPerson();
+        Assertions.assertNotNull(pessoa);
     }
 
     @Test
@@ -38,6 +39,8 @@ class PessoaControllerTest {
         Pessoa pessoa = createPerson();
 
         List<Pessoa> entities = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/pessoas")
@@ -56,8 +59,9 @@ class PessoaControllerTest {
     @Test
     public void shouldFindOne() {
         Pessoa pessoa = createPerson();
-
         Pessoa entity = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/pessoas/{id}", pessoa.id)
@@ -72,6 +76,8 @@ class PessoaControllerTest {
     public void shouldDelete() {
         Pessoa pessoa = createPerson();
         given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("/pessoas/{id}", pessoa.id)
@@ -79,6 +85,8 @@ class PessoaControllerTest {
                 .statusCode(ACCEPTED.getStatusCode());
 
         given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/pessoas/{id}", pessoa.id)
@@ -92,6 +100,8 @@ class PessoaControllerTest {
         pessoa.nome = faker.dragonBall().character();
 
         Pessoa pessoaAtualizada = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .body(pessoa)
@@ -105,6 +115,8 @@ class PessoaControllerTest {
     private Pessoa createPerson() {
         Pessoa pessoa = getPessoa();
         return given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .body(pessoa)
