@@ -48,8 +48,8 @@ class PessoaControllerTest {
                 });
 
         Assertions.assertFalse(entities.isEmpty());
-        Assertions.assertTrue(entities.stream().map(Pessoa::getNome)
-                .anyMatch(n -> n.equals(pessoa.getNome())));
+        Assertions.assertTrue(entities.stream().map(p -> p.nome)
+                .anyMatch(n -> n.equals(pessoa.nome)));
 
     }
 
@@ -60,7 +60,7 @@ class PessoaControllerTest {
         Pessoa entity = given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/pessoas/{id}", pessoa.getId())
+                .get("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -74,14 +74,14 @@ class PessoaControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/pessoas/{id}", pessoa.getId())
+                .delete("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(ACCEPTED.getStatusCode());
 
         given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/pessoas/{id}", pessoa.getId())
+                .get("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
     }
@@ -89,13 +89,13 @@ class PessoaControllerTest {
     @Test
     public void shouldUpdate() {
         Pessoa pessoa = createPerson();
-        pessoa.setNome(faker.dragonBall().character());
+        pessoa.nome = faker.dragonBall().character();
 
         Pessoa pessoaAtualizada = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .body(pessoa)
-                .put("/pessoas/{id}", pessoa.getId())
+                .put("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(ACCEPTED.getStatusCode())
                 .extract().as(Pessoa.class);
@@ -116,11 +116,11 @@ class PessoaControllerTest {
 
     private Pessoa getPessoa() {
         Pessoa pessoa = new Pessoa();
-        pessoa.setNome(faker.name().firstName());
-        pessoa.setEmail(faker.bothify("????##@gmail.com"));
-        pessoa.setTelefone(faker.phoneNumber().cellPhone());
-        pessoa.setEndereco(faker.address().cityName());
-        pessoa.setSenha(faker.number().digits(3));
+        pessoa.nome = (faker.name().firstName());
+        pessoa.email = faker.bothify("????##@gmail.com");
+        pessoa.telefone = faker.phoneNumber().cellPhone();
+        pessoa.endereco = faker.address().cityName();
+        pessoa.senha = faker.number().digits(3);
         return pessoa;
     }
 }
