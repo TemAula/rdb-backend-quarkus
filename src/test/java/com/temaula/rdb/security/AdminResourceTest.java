@@ -46,13 +46,4 @@ class AdminResourceTest {
                 .statusCode(HttpStatus.SC_OK);
 
     }
-
-    @Test
-    public void shouldReturnMe() {
-        given()
-                .get("/api/admin/me")
-                .then()
-                .statusCode(HttpStatus.SC_OK);
-
-    }
 }
