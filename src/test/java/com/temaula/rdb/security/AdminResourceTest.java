@@ -20,7 +20,7 @@ class AdminResourceTest {
                 .when()
                 .get("/api/admin")
                 .then()
-                .statusCode(FORBIDDEN.getStatusCode());
+                .statusCode(UNAUTHORIZED.getStatusCode());
     }
 
     @Test
@@ -31,7 +31,7 @@ class AdminResourceTest {
                 .when()
                 .get("/api/admin")
                 .then()
-                .statusCode(UNAUTHORIZED.getStatusCode());
+                .statusCode(FORBIDDEN.getStatusCode());
     }
 
     @Test
