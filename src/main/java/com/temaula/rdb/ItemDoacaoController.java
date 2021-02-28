@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.temaula.rdb;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

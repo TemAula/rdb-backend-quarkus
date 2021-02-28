@@ -1,15 +1,15 @@
-package org.acme.getting.started;
+package com.temaula.rdb;
 
-import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import java.util.Objects;
 
 @Entity(name = "pessoa")
-public class Pessoa implements Serializable {
+public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,7 @@ public class Pessoa implements Serializable {
     private String nome;
 
     @Column(length = 32, nullable = false)
+    @Email
     private String email;
 
     @Column(length = 16, nullable = false)
@@ -78,6 +79,13 @@ public class Pessoa implements Serializable {
         this.senha = senha;
     }
 
+    public void atualizar(Pessoa pessoa) {
+        this.senha = pessoa.getSenha();
+        this.nome = pessoa.getNome();
+        this.telefone = pessoa.getTelefone();
+        this.email = pessoa.getEmail();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -106,4 +114,5 @@ public class Pessoa implements Serializable {
                 ", senha='" + senha + '\'' +
                 '}';
     }
+
 }
