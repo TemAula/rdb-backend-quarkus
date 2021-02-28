@@ -9,9 +9,9 @@ import org.jboss.logging.Logger;
 
 
 @Singleton
-public class Startup {
+public class UsuarioStartup {
 
-    private static final Logger LOGGER = Logger.getLogger(Startup.class);
+    private static final Logger LOGGER = Logger.getLogger(UsuarioStartup.class);
 
     @Transactional
     public void loadUsers(@Observes StartupEvent evt) {
