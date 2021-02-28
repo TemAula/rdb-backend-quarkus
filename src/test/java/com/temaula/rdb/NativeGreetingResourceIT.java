@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.temaula.rdb;
 
 import io.quarkus.test.junit.NativeImageTest;
 

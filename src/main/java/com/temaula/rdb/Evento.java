@@ -1,4 +1,4 @@
-package org.acme.getting.started;
+package com.temaula.rdb;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -28,18 +28,6 @@ public class Evento implements Serializable {
 	public Evento() {
 	}
 
-	public Evento(Long id, String nome, LocalDate dataInicio, LocalDate dataFim, LocalDate dataCriacao, boolean ativo,
-			String descricao, String urlImagem) {
-		// super();
-		this.id = id;
-		this.nome = nome;
-		setDataInicio(dataInicio);
-		setDataFim(dataFim);
-		setDataCriacao(dataCriacao);
-		this.ativo = ativo;
-		this.descricao = descricao;
-		this.urlImagem = urlImagem;
-	}
 
 	public Long getId() {
 		return id;

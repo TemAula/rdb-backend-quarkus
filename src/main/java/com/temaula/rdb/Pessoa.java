@@ -1,16 +1,15 @@
-package org.acme.getting.started;
-
-import java.io.Serializable;
-import java.util.Objects;
+package com.temaula.rdb;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import java.util.Objects;
 
 @Entity(name = "pessoa")
-public class Pessoa implements Serializable {
+public class Pessoa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +19,7 @@ public class Pessoa implements Serializable {
     private String nome;
 
     @Column(length = 32, nullable = false)
+    @Email
     private String email;
 
     @Column(length = 16, nullable = false)
@@ -31,23 +31,7 @@ public class Pessoa implements Serializable {
     @Column(length = 16, nullable = false)
     private String senha;
 
-    public Pessoa() {
-		// TODO Auto-generated constructor stub
-	}
-    
-    
-    public Pessoa(Long id, String nome, String email, String telefone, String endereco, String senha) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.email = email;
-		this.telefone = telefone;
-		this.endereco = endereco;
-		this.senha = senha;
-	}
-
-
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,7 +79,14 @@ public class Pessoa implements Serializable {
         this.senha = senha;
     }
 
-	@Override
+    public void atualizar(Pessoa pessoa) {
+        this.senha = pessoa.getSenha();
+        this.nome = pessoa.getNome();
+        this.telefone = pessoa.getTelefone();
+        this.email = pessoa.getEmail();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -123,4 +114,5 @@ public class Pessoa implements Serializable {
                 ", senha='" + senha + '\'' +
                 '}';
     }
+
 }
