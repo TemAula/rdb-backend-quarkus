@@ -50,10 +50,6 @@ class AdminResourceTest {
     @Test
     public void shouldReturnMe() {
         given()
-                .auth()
-                .preemptive()
-                .basic("admin", "admin")
-                .when()
                 .get("/api/admin/me")
                 .then()
                 .statusCode(HttpStatus.SC_OK);
