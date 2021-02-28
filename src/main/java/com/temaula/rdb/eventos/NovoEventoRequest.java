@@ -25,13 +25,6 @@ public class NovoEventoRequest {
     private LocalDate dataInicio;
     private LocalDate dataFim;
 
-    public Evento criarNovoEvento() {
-        return new Evento(this.nome,
-                this.descricao,
-                this.dataInicio,
-                this.dataFim);
-    }
-
     public String getNome() {
         return nome;
     }
@@ -64,4 +57,10 @@ public class NovoEventoRequest {
         this.dataFim = dataFim;
     }
 
+    public Evento novoEvento() {
+        return new Evento(this.nome,
+                this.descricao,
+                this.dataInicio,
+                this.dataFim);
+    }
 }

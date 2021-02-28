@@ -7,6 +7,7 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 
 public class UniqueConstraintValidator implements ConstraintValidator<Unique, Serializable> {
+
     private Unique annotation;
 
     @Override
@@ -28,12 +29,13 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Se
             jpql.append(" e." + this.annotation.fieldName() + " = :value");
         }
 
-        boolean exists = JpaOperations.getEntityManager(this.annotation.entityType())
+        boolean eventoNaoEncontrado = JpaOperations
+                .getEntityManager(this.annotation.entityType())
                 .createQuery(jpql.toString(), this.annotation.entityType())
                 .setParameter("value", value)
                 .setMaxResults(1)
                 .getResultStream().count() == 0;
 
-        return exists;
+        return eventoNaoEncontrado;
     }
 }

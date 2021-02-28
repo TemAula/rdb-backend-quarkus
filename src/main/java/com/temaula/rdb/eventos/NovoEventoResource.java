@@ -16,15 +16,11 @@ import javax.ws.rs.core.Response;
 @Transactional
 public class NovoEventoResource {
 
-    @Inject
-    EventoRepository eventoRepository;
-
     @POST
-    public Response executar(@Valid NovoEventoRequest input) {
-        Evento novoEvento = input.criarNovoEvento();
-        eventoRepository.persist(novoEvento);
-        NovoEventoResponse response = new NovoEventoResponse(novoEvento);
-        return Response.ok(response).build();
+    public Response execute(@Valid NovoEventoRequest input) {
+        Evento novoEvento = input.novoEvento();
+        novoEvento.persist();
+        return Response.ok(new NovoEventoResponse(novoEvento)).build();
     }
 
 }

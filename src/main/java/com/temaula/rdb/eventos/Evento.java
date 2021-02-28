@@ -1,6 +1,8 @@
 package com.temaula.rdb.eventos;
 
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
 import javax.persistence.*;
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;
@@ -13,7 +15,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Entity
-public class Evento implements Serializable {
+public class Evento extends PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

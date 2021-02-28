@@ -18,7 +18,6 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.reset;
 import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
@@ -118,13 +117,13 @@ public class NovoEventoResourceTest {
     @ParameterizedTest(name = "{0}")
     @DisplayName("POST /eventos -> deve retornar 400 em caso de falha")
     @MethodSource("testDeveRetornar400EmCasoDeFalhaArgs")
-    public void testDeveRetornar400EmCasoDeFalha(final String desc, final Optional<Runnable> scenario,
+    public void testDeveRetornar400EmCasoDeFalha(final String desc, final Map<?, ?> eventoPreExistente,
                                                  final Map<?, ?> body) throws InterruptedException {
 
-        // definindo cenário
-        scenario.ifPresent(this::setScenario);
-        reset();
+        Optional.ofNullable(eventoPreExistente).ifPresent(this::persistir);
+
         given()
+                .log().ifValidationFails()
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
@@ -135,23 +134,22 @@ public class NovoEventoResourceTest {
     }
 
     @Transactional
-    void setScenario(Runnable runnable) {
-        runnable.run();
+    void persistir(Map<?,?> evento) {
+        deveRetornar200MaisNovoEventoRegistrado(evento);
     }
 
+
+
     private static Stream<Arguments> testDeveRetornar400EmCasoDeFalhaArgs() {
-        return Stream.of(
+
+        final var arguments = Stream.of(
                 Arguments.arguments(
                         "quando todos os parâmetros fornecidos forem válidos porém com nome de evento já registrado",
-                        Optional.of(
-                                (Runnable) () -> {
-                                    deveRetornar200MaisNovoEventoRegistrado(Map.of(
-                                            "nome", "Sopão",
-                                            "descricao", "d".repeat(400),
-                                            "dataInicio", "2021-01-28",
-                                            "dataFim", "2021-02-28"
-                                    ));
-                                }
+                        Map.of(
+                                "nome", "Sopão",
+                                "descricao", "d".repeat(400),
+                                "dataInicio", "2021-01-28",
+                                "dataFim", "2021-02-28"
                         ),
                         Map.of(
                                 "nome", "Sopão",
@@ -163,7 +161,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando nome for omitido, por ele é requerido",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 //"nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -174,7 +172,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando nome estiver vazio, por ele é requerido",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "",
                                 "descricao", "d".repeat(400),
@@ -185,7 +183,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando nome só tiver espaco em branco, por ele é requerido",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", " ".repeat(10),
                                 "descricao", "d".repeat(400),
@@ -196,7 +194,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando dataInicio for omitido, pois ela é requirida",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -207,7 +205,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando dataInicio não seguir o padrão ISO 8601 ( YYYY-MM-DD ), pois ela é requirida",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -218,7 +216,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando dataFim for fornecida mas não seguir o padrão ISO 8601 ( YYYY-MM-DD )",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -229,7 +227,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando descricao exceder o tamanho de 400 caracteres",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(401),
@@ -240,7 +238,7 @@ public class NovoEventoResourceTest {
                 ),
                 Arguments.arguments(
                         "quando dataFim for fornecida mas for menor que a dataInicio, gerando um período inválido",
-                        Optional.empty(),
+                        null,
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -250,6 +248,7 @@ public class NovoEventoResourceTest {
 
                 )
         );
+        return arguments;
     }
 
 }
