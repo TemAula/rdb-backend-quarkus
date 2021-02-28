@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.util.Objects;
 
-@Entity(name = "usuario")
+@Entity(name = "user")
 public class Usuario extends PanacheEntity {
 
     @Column(length = 32, nullable = false)
