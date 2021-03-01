@@ -34,7 +34,7 @@ public class AdicionarEventoResourceTest {
     @MethodSource("deveRetornar200Args")
     public void deveRetornar200(final String desc, final Map<?, ?> body) {
         given()
-                .log().everything()
+                .log().ifValidationFails()
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
