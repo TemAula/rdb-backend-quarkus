@@ -30,16 +30,12 @@ public class Periodo implements Serializable {
         return periodo;
     }
 
-    public boolean isValid() {
+    public static boolean isValid(Periodo periodo) {
+        var dataInicio = periodo.dataInicio;
+        var dataFim = periodo.dataFim;
         if (dataInicio == null
-                && dataFim == null) {
+                || dataFim == null) {
             return false;
-        }
-        if (dataInicio == null) {
-            return false;
-        }
-        if (dataFim == null) {
-            return true;
         }
         return dataInicio.isBefore(dataFim)
                 || dataInicio.isEqual(dataFim);
@@ -48,7 +44,7 @@ public class Periodo implements Serializable {
     public static class PeriodoValidator implements ConstraintValidator<CustomConstraint, Periodo> {
         @Override
         public boolean isValid(Periodo value, ConstraintValidatorContext context) {
-            return value.isValid();
+            return Periodo.isValid(value);
         }
     }
 }

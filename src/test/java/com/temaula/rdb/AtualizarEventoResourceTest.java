@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -28,12 +29,12 @@ public class AtualizarEventoResourceTest {
     @BeforeAll
     public static void persistirEventoParaAtualizacao() {
 
-        final var novoEventoRequest = new NovoEventoRequest();
-        novoEventoRequest.nome= UUID.randomUUID().toString();
-        novoEventoRequest.descricao=UUID.randomUUID().toString();
-        novoEventoRequest.dataInicio=LocalDate.now();
-        novoEventoRequest.dataFim=LocalDate.now().plusDays(1);
-        eventId = Evento.novoEvento(novoEventoRequest).id;
+        final var novoEvento = new Evento();
+        novoEvento.nome = UUID.randomUUID().toString();
+        novoEvento.descricao = UUID.randomUUID().toString();
+        novoEvento.periodoVigencia = Periodo.of(LocalDate.now(), LocalDate.now().plusDays(1));
+        novoEvento.persist();
+        eventId = novoEvento.id;
     }
 
     @Transactional
@@ -51,23 +52,22 @@ public class AtualizarEventoResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .put("/eventos/{eventId}",Map.of("eventId", eventId))
+                .put("/eventos/{eventId}", Map.of("eventId", eventId))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("id", is(eventId.intValue()))
                 .body("nome", is(body.get("nome")))
-                .body("descricao",
-                        body.containsKey("descricao")
-                                ? is(body.get("descricao"))
-                                : nullValue())
-                .body("dataInicio", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
-                .body("dataInicio", is(body.get("dataInicio")))
-                .body("dataFim", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
-                .body("dataFim", is(
-                        body.containsKey("dataFim")
-                                ? body.get("dataFim")
-                                : body.get("dataInicio")));
+                .body("periodoVigencia.dataInicio", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+                .body("periodoVigencia.dataFim", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+                .body("periodoVigencia.dataInicio", is(Optional.of(body.get("periodoVigencia"))
+                        .map(Map.class::cast)
+                        .get()
+                        .get("dataInicio")))
+                .body("periodoVigencia.dataFim", is(Optional.of(body.get("periodoVigencia"))
+                        .map(Map.class::cast)
+                        .get()
+                        .get("dataFim")));
     }
 
     private static Stream<Arguments> deveRetornar200Args() {
@@ -77,45 +77,31 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
-                        "quando os parâmetros fornecidos são válidos porém omitindo a " +
-                                "descricao",
+                        "quando os parâmetros requeridos fornecidos forem válidos, omitindo descrição",
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
-                        "quando os parâmetros fornecidos são válidos em especial com a descricao vazia",
+                        "quando os parâmetros requeridos fornecidos forem válidos, porém com a descricao vazia",
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", "",
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
-                        "quando os parâmetros fornecidos são válidos em especial com a descricao somente com espaços " +
+                        "quando os parâmetros requeridos fornecidos forem válidos, porém com descricao em branco" +
                                 "em branco",
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", " ".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
-                        )
-                ),
-                Arguments.arguments(
-                        "quando os parâmetros fornecidos são válidos porém omitindo dataFim, sendo que dataFim será" +
-                                " igual a dataInicio",
-                        Map.of(
-                                "nome", UUID.randomUUID().toString(),
-                                "descricao", "f".repeat(400),
-                                "dataInicio", "2021-01-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 )
         );
@@ -131,7 +117,7 @@ public class AtualizarEventoResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .put("/eventos/{eventId}",Map.of("eventId", eventId))
+                .put("/eventos/{eventId}", Map.of("eventId", eventId))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -145,8 +131,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 //"nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -155,8 +140,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -165,38 +149,51 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", " ".repeat(10),
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando dataInicio for omitido, pois ela é requirida",
+                        "quando periodoDeVigencia for omitido, por ele é requerido",
                         Map.of(
-                                "nome", "Sopão",
-                                "descricao", "d".repeat(400),
-                                //"dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "nome", UUID.randomUUID().toString(),
+                                "descricao", "d".repeat(400)
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando dataInicio não seguir o padrão ISO 8601 ( YYYY-MM-DD ), pois ela é requirida",
+                        "quando periodoDeVigencia.dataInicio for omitido, pois ela é requirida",
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "20210228",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of( "dataFim", "2021-02-28")
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando dataFim for fornecida mas não seguir o padrão ISO 8601 ( YYYY-MM-DD )",
+                        "quando periodoDeVigencia.dataInicio não seguir o padrão ISO 8601 ( YYYY-MM-DD ), pois ela é requirida",
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "20210228"
+                                "periodoVigencia", Map.of("dataInicio", "20210128", "dataFim", "2021-02-28")
+                        )
+
+                ),
+                Arguments.arguments(
+                        "quando periodoDeVigencia.dataFim for omitido, pois ela é requirida",
+                        Map.of(
+                                "nome", "Sopão",
+                                "descricao", "d".repeat(400),
+                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28")
+                        )
+
+                ),
+                Arguments.arguments(
+                        "quando periodoDeVigencia.dataFim for fornecida mas não seguir o padrão ISO 8601 ( YYYY-MM-DD )",
+                        Map.of(
+                                "nome", "Sopão",
+                                "descricao", "d".repeat(400),
+                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","20210228")
                         )
 
                 ),
@@ -205,8 +202,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(401),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","2021-02-28")
                         )
 
                 ),
@@ -215,8 +211,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "2021-02-27"
+                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","2021-01-27")
                         )
 
                 )

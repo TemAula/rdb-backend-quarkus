@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -19,7 +20,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
-public class NovoEventoResourceTest {
+public class AdicionarEventoResourceTest {
 
     @Transactional
     @BeforeEach
@@ -33,7 +34,7 @@ public class NovoEventoResourceTest {
     @MethodSource("deveRetornar200Args")
     public void deveRetornar200(final String desc, final Map<?, ?> body) {
         given()
-                .log().ifValidationFails()
+                .log().everything()
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
@@ -47,13 +48,16 @@ public class NovoEventoResourceTest {
                         body.containsKey("descricao")
                                 ? is(body.get("descricao"))
                                 : nullValue())
-                .body("dataInicio", matchesRegex("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"))
-                .body("dataInicio", is(body.get("dataInicio")))
-                .body("dataFim", matchesRegex("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"))
-                .body("dataFim", is(
-                        body.containsKey("dataFim")
-                                ? body.get("dataFim")
-                                : body.get("dataInicio")));
+                .body("periodoVigencia.dataInicio", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+                .body("periodoVigencia.dataFim", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
+                .body("periodoVigencia.dataInicio", is(Optional.of(body.get("periodoVigencia"))
+                        .map(Map.class::cast)
+                        .get()
+                        .get("dataInicio")))
+                .body("periodoVigencia.dataFim", is(Optional.of(body.get("periodoVigencia"))
+                        .map(Map.class::cast)
+                        .get()
+                        .get("dataFim")));
     }
 
     private static Stream<Arguments> deveRetornar200Args() {
@@ -63,8 +67,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
@@ -72,8 +75,7 @@ public class NovoEventoResourceTest {
                                 "descricao",
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
@@ -81,8 +83,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", "",
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 ),
                 Arguments.arguments(
@@ -91,17 +92,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", UUID.randomUUID().toString(),
                                 "descricao", " ".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
-                        )
-                ),
-                Arguments.arguments(
-                        "quando os parâmetros fornecidos são válidos porém omitindo dataFim, sendo que dataFim será" +
-                                " igual a dataInicio",
-                        Map.of(
-                                "nome", UUID.randomUUID().toString(),
-                                "descricao", "f".repeat(400),
-                                "dataInicio", "2021-01-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
                 )
         );
@@ -131,8 +122,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 //"nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -141,8 +131,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", "",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -151,18 +140,24 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", " ".repeat(10),
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando dataInicio for omitido, pois ela é requirida",
+                        "quando periodoVigencia for omitido, pois ele é requirida",
+                        Map.of(
+                                "nome", "Sopão",
+                                "descricao", "d".repeat(400)
+                        )
+
+                ),
+                Arguments.arguments(
+                        "quando periodoVigencia.dataInicio for omitido, pois ela é requirida",
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                //"dataInicio", "2021-01-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataFim", "2021-02-28")
                         )
 
                 ),
@@ -171,8 +166,16 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "20210228",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "20210128", "dataFim", "2021-02-28")
+                        )
+
+                ),
+                Arguments.arguments(
+                        "quando periodoVigencia.dataFim for omitido, pois ela é requirida",
+                        Map.of(
+                                "nome", "Sopão",
+                                "descricao", "d".repeat(400),
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28")
                         )
 
                 ),
@@ -181,8 +184,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "20210228"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "20210228")
                         )
 
                 ),
@@ -191,8 +193,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(401),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "2021-02-28"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -201,8 +202,7 @@ public class NovoEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "dataInicio", "2021-02-28",
-                                "dataFim", "2021-02-27"
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-01-27")
                         )
 
                 )
