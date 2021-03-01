@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
-@Table(name = "evento")
 public class Evento extends PanacheEntity {
 
     @NotNull
