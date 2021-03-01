@@ -1,5 +1,7 @@
 package com.temaula.rdb;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -40,12 +42,10 @@ public class EventoController {
     @Produces(value = MediaType.APPLICATION_JSON)
     @Transactional
     public Response atualizar(@PathParam("id") Long id, @Valid Evento evento) {
-        Evento eventoRegistrado = Evento.findById(id);
-		eventoRegistrado.setAtivo(evento.isAtivo());
-        eventoRegistrado.setPeriodo(evento.getDataInicio(),evento.getDataFim());
-        eventoRegistrado.setNome(evento.getNome());
-        eventoRegistrado.setDescricao(evento.getDescricao());
-//		eventoRegistrado.setUrlImagem(evento.getUrlImagem());
+        Optional<Evento> eventoLocalizado = Evento.findByIdOptional(id);
+        Evento eventoRegistrado =
+                eventoLocalizado.orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
+        eventoRegistrado.atualizar(evento);
         eventoRegistrado.persist();
         return Response.status(Response.Status.ACCEPTED).entity(eventoRegistrado).build();
     }

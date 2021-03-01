@@ -8,6 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Constraint criada para ser possível habilitar validações customizadas
+ */
 @Constraint(validatedBy = CustomConstraintValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR,

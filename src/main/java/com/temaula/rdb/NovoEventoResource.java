@@ -16,10 +16,9 @@ import javax.ws.rs.core.Response;
 public class NovoEventoResource {
 
     @POST
-    public Response execute(@Valid NovoEventoRequest input) {
-        Evento novoEvento = input.novoEvento();
-        novoEvento.persist();
-        return Response.ok(new NovoEventoResponse(novoEvento)).build();
+    public Response novoEvento(@Valid NovoEventoRequest novoEvento) {
+        Evento eventoRegistrado = Evento.novoEvento(novoEvento);
+        return Response.ok(new NovoEventoResponse(eventoRegistrado)).build();
     }
 
 }

@@ -5,6 +5,9 @@ import javax.validation.ConstraintValidatorContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * ConstraintValidator criada tratar anotações do tipo {@link CustomConstraint} para ser possível habilitar validações customizadas
+ */
 public class CustomConstraintValidator implements ConstraintValidator<CustomConstraint, Object> {
 
     private CustomConstraint constraintAnnotation;
