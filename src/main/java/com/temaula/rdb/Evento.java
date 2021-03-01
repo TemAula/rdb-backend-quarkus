@@ -1,98 +1,71 @@
 package com.temaula.rdb;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
-public class Evento implements Serializable {
+public class Evento extends PanacheEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String nome;
-	private LocalDate dataInicio;
-	private LocalDate dataFim;
-	private LocalDate dataCriacao;
-	private boolean ativo;
-	private String descricao;
-//    private List<ItemDoacao> itensDoacao;
-//	private List<Pessoa> autor;
-	
-	private String urlImagem;
+    /**
+     * Cria um evento persistido a partir de um {@link NovoEventoRequest}
+     *
+     * @param novoEventoRequest não pode ser nulo, caso contrário um {@link NullPointerException} será lançado
+     *
+     * @return um evento persistido
+     *
+     * @throws NullPointerException caso novoEventoRequest informado estiver nulo
+     */
+    public static Evento novoEvento(@NotNull NovoEventoRequest novoEventoRequest) {
+        Objects.requireNonNull(novoEventoRequest, "parâmetros informados estão inválidos. Eles não podem ser nulos");
+        Evento evento = new Evento();
+        evento.dataCadastro = LocalDate.now();
+        evento.ativo = true;
+        evento.nome = novoEventoRequest.nome;
+        evento.descricao = novoEventoRequest.descricao;
+        evento.periodoVigencia = Periodo.of(novoEventoRequest.dataInicio, novoEventoRequest.dataFim);
+        evento.persist();
+        return evento;
+    }
 
-	public Evento() {
-	}
+    /**
+     * Atualiza os valores do evento a partir de um evento base
+     *
+     * @param evento evento base
+     */
+    public void atualizar(Evento evento) {
+        this.ativo = evento.ativo;
+        this.periodoVigencia = evento.periodoVigencia;
+        this.nome = evento.nome;
+        this.descricao = evento.descricao;
+    }
 
+    @NotBlank
+    public String nome;
+    @Lob
+    @Column(length = 400)
+    @Size(max = 400)
+    public String descricao;
+    @NotNull
+    @Valid
+    public Periodo periodoVigencia;
+    @NotNull
+    public LocalDate dataCadastro;
 
-	public Long getId() {
-		return id;
-	}
+    public boolean ativo;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * Utilize o metodo {@link Evento#novoEvento(NovoEventoRequest)} <br/> Este construtor padrão é requerido pelo JPA
+     */
+    public Evento() {
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-
-	public LocalDate getDataCriacao() {
-		return dataCriacao;
-	}
-
-	public void setDataCriacao(LocalDate dataCriacao) {
-//		if(dataCriacao.isBefore(dataInicio) || dataCriacao.isEqual(dataInicio))
-		this.dataCriacao = dataCriacao;
-//		else
-//			System.out.println("Errrou");
-	}
-
-	public boolean isAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
-	public String getUrlImagem() {
-		return urlImagem;
-	}
-
-	public void setUrlImagem(String urlImagem) {
-		this.urlImagem = urlImagem;
-	}
+    }
 }
