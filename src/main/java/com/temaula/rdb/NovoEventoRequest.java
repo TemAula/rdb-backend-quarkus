@@ -5,7 +5,6 @@ import com.temaula.rdb.constraints.CustomConstraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -19,12 +18,11 @@ public class NovoEventoRequest implements ConstraintValidator<CustomConstraint,N
     public String nome;
     @Size(max = 400)
     public String descricao;
-    @NotNull
     public LocalDate dataInicio;
     public LocalDate dataFim;
 
     @Override
     public boolean isValid(NovoEventoRequest value, ConstraintValidatorContext context) {
-        return Evento.temPeriodoValido(value.dataInicio, value.dataFim);
+        return Periodo.of(value.dataInicio, value.dataFim).isValid();
     }
 }

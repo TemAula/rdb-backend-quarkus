@@ -14,8 +14,8 @@ public class NovoEventoResponse {
         this.id = novoEvento.id;
         this.nome = novoEvento.nome;
         this.descricao = novoEvento.descricao;
-        this.dataInicio = novoEvento.dataInicio;
-        this.dataFim = novoEvento.dataFim;
+        this.dataInicio = novoEvento.periodoVigencia.dataInicio;
+        this.dataFim = novoEvento.periodoVigencia.dataFim;
     }
 
 }
