@@ -36,17 +36,4 @@ public class EventoController {
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
-    @PUT
-    @Path("/{id}")
-    @Consumes(value = MediaType.APPLICATION_JSON)
-    @Produces(value = MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response atualizar(@PathParam("id") Long id, @Valid Evento evento) {
-        Optional<Evento> eventoLocalizado = Evento.findByIdOptional(id);
-        Evento eventoRegistrado =
-                eventoLocalizado.orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
-        eventoRegistrado.atualizar(evento);
-        eventoRegistrado.persist();
-        return Response.status(Response.Status.ACCEPTED).entity(eventoRegistrado).build();
-    }
 }

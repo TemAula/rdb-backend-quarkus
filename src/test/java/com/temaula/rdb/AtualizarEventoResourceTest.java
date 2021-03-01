@@ -2,8 +2,8 @@ package com.temaula.rdb;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -19,17 +20,30 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
-public class NovoEventoResourceTest {
+public class AtualizarEventoResourceTest {
+
+    private static Long eventId;
 
     @Transactional
-    @BeforeEach
-    @AfterEach
-    public void removerEventos() {
+    @BeforeAll
+    public static void persistirEventoParaAtualizacao() {
+
+        final var novoEventoRequest = new NovoEventoRequest();
+        novoEventoRequest.nome= UUID.randomUUID().toString();
+        novoEventoRequest.descricao=UUID.randomUUID().toString();
+        novoEventoRequest.dataInicio=LocalDate.now();
+        novoEventoRequest.dataFim=LocalDate.now().plusDays(1);
+        eventId = Evento.novoEvento(novoEventoRequest).id;
+    }
+
+    @Transactional
+    @AfterAll
+    public static void removerEventos() {
         Evento.deleteAll();
     }
 
     @ParameterizedTest(name = "{0}")
-    @DisplayName("POST /eventos -> deve retornar 200 e retornar o evento persistido")
+    @DisplayName("PUT /eventos/{id} -> deve retornar 200 e retornar o evento atualizado")
     @MethodSource("deveRetornar200Args")
     public void deveRetornar200(final String desc, final Map<?, ?> body) {
         given()
@@ -37,19 +51,19 @@ public class NovoEventoResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .post("/eventos")
+                .put("/eventos/{eventId}",Map.of("eventId", eventId))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("id", isA(Number.class))
+                .body("id", is(eventId.intValue()))
                 .body("nome", is(body.get("nome")))
                 .body("descricao",
                         body.containsKey("descricao")
                                 ? is(body.get("descricao"))
                                 : nullValue())
-                .body("dataInicio", matchesRegex("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"))
+                .body("dataInicio", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
                 .body("dataInicio", is(body.get("dataInicio")))
-                .body("dataFim", matchesRegex("[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}"))
+                .body("dataFim", matchesRegex("[0-9]{4}-[0-9]{2}-[0-9]{2}"))
                 .body("dataFim", is(
                         body.containsKey("dataFim")
                                 ? body.get("dataFim")
@@ -108,7 +122,7 @@ public class NovoEventoResourceTest {
     }
 
     @ParameterizedTest(name = "{0}")
-    @DisplayName("POST /eventos -> deve retornar 400 em caso de falha")
+    @DisplayName("PUT /eventos -> deve retornar 400 em caso de falha")
     @MethodSource("deveRetornar400Args")
     public void deveRetornar400(final String desc,
                                 final Map<?, ?> body) throws InterruptedException {
@@ -117,7 +131,7 @@ public class NovoEventoResourceTest {
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
-                .post("/eventos")
+                .put("/eventos/{eventId}",Map.of("eventId", eventId))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());

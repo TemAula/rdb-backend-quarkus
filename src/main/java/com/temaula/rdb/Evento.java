@@ -22,7 +22,7 @@ public class Evento extends PanacheEntity {
      *
      * @return um evento persistido
      *
-     * @throws NullPointerException caso novoEventoRequest informado estiver nulo
+     * @throws NullPointerException caso novoEventoRequest informado for nulo
      */
     public static Evento novoEvento(@NotNull NovoEventoRequest novoEventoRequest) {
         Objects.requireNonNull(novoEventoRequest, "parâmetros informados estão inválidos. Eles não podem ser nulos");
@@ -37,15 +37,17 @@ public class Evento extends PanacheEntity {
     }
 
     /**
-     * Atualiza os valores do evento a partir de um evento base
+     * Atualiza os valores do evento a partir de um {@link AtualizarEventoRequest}
      *
-     * @param evento evento base
+     * @param atualizarEventoRequest
+     *
+     * @throws NullPointerException caso atualizarEventoRequest informado for nulo
      */
-    public void atualizar(Evento evento) {
-        this.ativo = evento.ativo;
-        this.periodoVigencia = evento.periodoVigencia;
-        this.nome = evento.nome;
-        this.descricao = evento.descricao;
+    public void atualizar(@NotNull AtualizarEventoRequest atualizarEventoRequest) {
+        Objects.requireNonNull(atualizarEventoRequest, "parâmetros informados estão inválidos. Eles não podem ser nulos");
+        this.periodoVigencia = Periodo.of(atualizarEventoRequest.dataInicio, atualizarEventoRequest.dataFim);
+        this.nome = atualizarEventoRequest.nome;
+        this.descricao = atualizarEventoRequest.descricao;
     }
 
     @NotBlank
