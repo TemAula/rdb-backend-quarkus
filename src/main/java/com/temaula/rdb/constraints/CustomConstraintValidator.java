@@ -1,4 +1,4 @@
-package com.temaula.rdb.shared.constraints;
+package com.temaula.rdb.constraints;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -1,7 +1,7 @@
-package com.temaula.rdb.eventos;
+package com.temaula.rdb;
 
-import com.temaula.rdb.shared.constraints.CustomConstraint;
-import com.temaula.rdb.shared.constraints.Unique;
+import com.temaula.rdb.constraints.CustomConstraint;
+import com.temaula.rdb.constraints.Unique;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -9,10 +9,10 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @CustomConstraint(
-        delegateTo = NovoEventoPeriodoValidator.class,
+        delegateTo = TemPeriodo.Validator.class,
         message = "período inválido"
 )
-public class NovoEventoRequest {
+public class NovoEventoRequest implements TemPeriodo{
 
     @NotBlank
     @Unique(entityType = Evento.class,
@@ -63,4 +63,6 @@ public class NovoEventoRequest {
                 this.dataInicio,
                 this.dataFim);
     }
+
+
 }

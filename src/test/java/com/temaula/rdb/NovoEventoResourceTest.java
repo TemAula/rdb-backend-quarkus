@@ -1,5 +1,6 @@
-package com.temaula.rdb.eventos;
+package com.temaula.rdb;
 
+import com.temaula.rdb.Evento;
 import io.quarkus.hibernate.orm.panache.runtime.JpaOperations;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -27,7 +28,7 @@ public class NovoEventoResourceTest {
     @BeforeEach
     @AfterEach
     public void cleanUp() {
-        JpaOperations.deleteAll(Evento.class);
+        Evento.deleteAll();
     }
 
     @ParameterizedTest(name = "{0}")
@@ -39,12 +40,13 @@ public class NovoEventoResourceTest {
 
     private static Map deveRetornar200MaisNovoEventoRegistrado(Map<?, ?> body) {
         return given()
+                .log().ifValidationFails()
                 .when()
                 .contentType(ContentType.JSON)
                 .body(body)
                 .post("/eventos")
                 .then()
-                .log().ifValidationFails()
+                .log().everything()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("id", isA(Number.class))
                 .body("nome", is(body.get("nome")))
@@ -129,7 +131,7 @@ public class NovoEventoResourceTest {
                 .body(body)
                 .post("/eventos")
                 .then()
-                .log().ifValidationFails()
+                .log().everything()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 

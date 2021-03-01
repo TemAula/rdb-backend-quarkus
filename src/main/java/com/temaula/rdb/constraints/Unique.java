@@ -1,27 +1,30 @@
-package com.temaula.rdb.shared.constraints;
+package com.temaula.rdb.constraints;
 
 import javax.validation.Constraint;
-import javax.validation.ConstraintValidator;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = CustomConstraintValidator.class)
+@Constraint(validatedBy = UniqueConstraintValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.CONSTRUCTOR,
+        ElementType.PARAMETER,
         ElementType.FIELD,
         ElementType.TYPE,
         ElementType.METHOD})
-public @interface CustomConstraint {
+public @interface Unique {
 
-    String message() default "invalid";
+    String message() default "valor informado já cadastrado para a entidade informada";
 
     Class<? extends Payload>[] payload() default {};
 
     Class<?>[] groups() default {};
 
-    Class<? extends ConstraintValidator<CustomConstraint, ? extends Object>> delegateTo();
+    Class<?> entityType();
 
+    String fieldName();
+
+    boolean ignoreCase() default true;
 }

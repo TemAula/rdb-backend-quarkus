@@ -1,4 +1,4 @@
-package com.temaula.rdb.eventos;
+package com.temaula.rdb;
 
 import java.time.LocalDate;
 

@@ -1,6 +1,5 @@
-package com.temaula.rdb.eventos;
+package com.temaula.rdb;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;

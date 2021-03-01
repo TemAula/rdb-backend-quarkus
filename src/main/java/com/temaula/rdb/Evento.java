@@ -1,98 +1,106 @@
 package com.temaula.rdb;
 
-import java.io.Serializable;
+import com.temaula.rdb.constraints.CustomConstraint;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Optional;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+@CustomConstraint(
+        delegateTo = TemPeriodo.Validator.class,
+        message = "período inválido"
+)
 @Entity
-public class Evento implements Serializable {
+public class Evento extends PanacheEntityBase implements TemPeriodo {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	private String nome;
-	private LocalDate dataInicio;
-	private LocalDate dataFim;
-	private LocalDate dataCriacao;
-	private boolean ativo;
-	private String descricao;
-//    private List<ItemDoacao> itensDoacao;
-//	private List<Pessoa> autor;
-	
-	private String urlImagem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotBlank
+    private String nome;
+    @Lob
+    @Column(length = 400)
+    @Size(max = 400)
+    private String descricao;
+    @NotNull
+    private LocalDate dataInicio;
+    @NotNull
+    private LocalDate dataFim;
+    @NotNull
+    private LocalDate dataCadastro;
 
-	public Evento() {
-	}
+    private boolean ativo;
 
+    /**
+     * Não utilizar, é requerido pelo JPA
+     */
+    @Deprecated
+    public Evento() {
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Evento(
+            @NotBlank
+                    String nome,
+            @Size(max = 400)
+                    String descricao,
+            @NotNull
+                    LocalDate dataInicio,
+            LocalDate dataFim) {
+        this.dataCadastro = LocalDate.now();
+        this.ativo = true;
+        this.setNome(nome);
+        this.setDescricao(descricao);
+        this.setPeriodo(dataInicio, dataFim);
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
 
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
 
-	public LocalDate getDataCriacao() {
-		return dataCriacao;
-	}
+    public void setPeriodo(LocalDate dataInicio, LocalDate dataFim) {
+        this.dataInicio = dataInicio;
+        this.dataFim = Optional
+                .ofNullable(dataFim)
+                .orElse(this.dataInicio);
+    }
 
-	public void setDataCriacao(LocalDate dataCriacao) {
-//		if(dataCriacao.isBefore(dataInicio) || dataCriacao.isEqual(dataInicio))
-		this.dataCriacao = dataCriacao;
-//		else
-//			System.out.println("Errrou");
-	}
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
+    }
 
-	public boolean isAtivo() {
-		return ativo;
-	}
+    public boolean isAtivo() {
+        return ativo;
+    }
 
-	public void setAtivo(boolean ativo) {
-		this.ativo = ativo;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
-	public String getUrlImagem() {
-		return urlImagem;
-	}
-
-	public void setUrlImagem(String urlImagem) {
-		this.urlImagem = urlImagem;
-	}
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
 }
