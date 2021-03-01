@@ -46,7 +46,7 @@ public class NovoEventoResourceTest {
                 .body(body)
                 .post("/eventos")
                 .then()
-                .log().everything()
+                .log().ifValidationFails()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("id", isA(Number.class))
                 .body("nome", is(body.get("nome")))
@@ -131,7 +131,7 @@ public class NovoEventoResourceTest {
                 .body(body)
                 .post("/eventos")
                 .then()
-                .log().everything()
+                .log().ifValidationFails()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 

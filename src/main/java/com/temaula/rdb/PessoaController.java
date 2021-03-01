@@ -1,5 +1,9 @@
 package com.temaula.rdb;
 
+import io.quarkus.panache.common.Sort;
+
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
@@ -18,23 +22,22 @@ import java.util.Optional;
 @Path("/pessoas")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@RolesAllowed({"user", "admin"})
 public class PessoaController {
 
-    @Inject
-    private PessoaRepository repository;
 
     @GET
     @Path("/")
     @Produces(value = MediaType.APPLICATION_JSON)
     public Response listarTodos() {
-        return Response.ok(repository.listAll()).build();
+        return Response.ok(Pessoa.listAll(Sort.ascending("nome"))).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = MediaType.APPLICATION_JSON)
     public Pessoa pesquisarId(@PathParam("id") Long id) {
-        Optional<Pessoa> pessoa = repository.findByIdOptional(id);
+        Optional<Pessoa> pessoa = Pessoa.findByIdOptional(id);
         return pessoa
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
@@ -43,7 +46,7 @@ public class PessoaController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public Response inserir(Pessoa pessoa) {
-        repository.persist(pessoa);
+        pessoa.persist();
         return Response.status(Response.Status.CREATED).entity(pessoa).build();
     }
 
@@ -52,7 +55,7 @@ public class PessoaController {
     @Consumes(value = {MediaType.APPLICATION_JSON})
     @Transactional
     public Response deletar(@PathParam("id") Long id) {
-        repository.deleteById(id);
+        Pessoa.deleteById(id);
         return Response.status(Response.Status.ACCEPTED).build();
     }
 
@@ -62,10 +65,10 @@ public class PessoaController {
     @Transactional
     public Response atualizar(@PathParam("id") Long id, Pessoa pessoa) {
 
-        Pessoa pessoaNova = repository.findByIdOptional(id)
+        Pessoa pessoaNova = Pessoa.<Pessoa>findByIdOptional(id)
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
         pessoaNova.atualizar(pessoa);
-        repository.persist(pessoaNova);
+        pessoaNova.persist();
         return Response.status(Response.Status.ACCEPTED).entity(pessoaNova).build();
     }
 
