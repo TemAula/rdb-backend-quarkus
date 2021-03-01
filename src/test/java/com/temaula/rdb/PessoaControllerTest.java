@@ -31,6 +31,7 @@ class PessoaControllerTest {
     @Test
     public void shouldInsert() {
         Pessoa pessoa = createPerson();
+        Assertions.assertNotNull(pessoa);
     }
 
     @Test
@@ -38,6 +39,8 @@ class PessoaControllerTest {
         Pessoa pessoa = createPerson();
 
         List<Pessoa> entities = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/pessoas")
@@ -48,19 +51,20 @@ class PessoaControllerTest {
                 });
 
         Assertions.assertFalse(entities.isEmpty());
-        Assertions.assertTrue(entities.stream().map(Pessoa::getNome)
-                .anyMatch(n -> n.equals(pessoa.getNome())));
+        Assertions.assertTrue(entities.stream().map(p -> p.nome)
+                .anyMatch(n -> n.equals(pessoa.nome)));
 
     }
 
     @Test
     public void shouldFindOne() {
         Pessoa pessoa = createPerson();
-
         Pessoa entity = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/pessoas/{id}", pessoa.getId())
+                .get("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
@@ -72,16 +76,20 @@ class PessoaControllerTest {
     public void shouldDelete() {
         Pessoa pessoa = createPerson();
         given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
-                .delete("/pessoas/{id}", pessoa.getId())
+                .delete("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(ACCEPTED.getStatusCode());
 
         given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/pessoas/{id}", pessoa.getId())
+                .get("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(NOT_FOUND.getStatusCode());
     }
@@ -89,13 +97,15 @@ class PessoaControllerTest {
     @Test
     public void shouldUpdate() {
         Pessoa pessoa = createPerson();
-        pessoa.setNome(faker.dragonBall().character());
+        pessoa.nome = faker.dragonBall().character();
 
         Pessoa pessoaAtualizada = given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .body(pessoa)
-                .put("/pessoas/{id}", pessoa.getId())
+                .put("/pessoas/{id}", pessoa.id)
                 .then()
                 .statusCode(ACCEPTED.getStatusCode())
                 .extract().as(Pessoa.class);
@@ -105,6 +115,8 @@ class PessoaControllerTest {
     private Pessoa createPerson() {
         Pessoa pessoa = getPessoa();
         return given()
+                .auth()
+                .basic("user", "user")
                 .contentType(ContentType.JSON)
                 .when()
                 .body(pessoa)
@@ -116,11 +128,11 @@ class PessoaControllerTest {
 
     private Pessoa getPessoa() {
         Pessoa pessoa = new Pessoa();
-        pessoa.setNome(faker.name().firstName());
-        pessoa.setEmail(faker.bothify("????##@gmail.com"));
-        pessoa.setTelefone(faker.phoneNumber().cellPhone());
-        pessoa.setEndereco(faker.address().cityName());
-        pessoa.setSenha(faker.number().digits(3));
+        pessoa.nome = (faker.name().firstName());
+        pessoa.email = faker.bothify("????##@gmail.com");
+        pessoa.telefone = faker.phoneNumber().cellPhone();
+        pessoa.endereco = faker.address().cityName();
+        pessoa.senha = faker.number().digits(3);
         return pessoa;
     }
 }
