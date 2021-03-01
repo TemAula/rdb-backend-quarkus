@@ -8,6 +8,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Embeddable
@@ -39,6 +40,19 @@ public class Periodo implements Serializable {
         }
         return dataInicio.isBefore(dataFim)
                 || dataInicio.isEqual(dataFim);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Periodo periodo = (Periodo) o;
+        return Objects.equals(dataInicio, periodo.dataInicio) && Objects.equals(dataFim, periodo.dataFim);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataInicio, dataFim);
     }
 
     public static class PeriodoValidator implements ConstraintValidator<CustomConstraint, Periodo> {
