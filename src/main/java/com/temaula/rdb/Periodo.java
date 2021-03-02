@@ -13,9 +13,12 @@ import java.util.Optional;
 
 @Embeddable
 @CustomConstraint(
-        delegateTo = Periodo.PeriodoValidator.class
+        delegateTo = Periodo.PeriodoValidator.class,
+        message = Periodo.ERROR_MESSAGE
 )
-public class Periodo implements Serializable {
+public class Periodo {
+
+    static final String ERROR_MESSAGE = "período inválido";
 
     @NotNull
     public LocalDate dataInicio;
@@ -25,9 +28,9 @@ public class Periodo implements Serializable {
     public static Periodo of(LocalDate dataInicio, LocalDate dataFim) {
         Periodo periodo = new Periodo();
         periodo.dataInicio = dataInicio;
-        periodo.dataFim = Optional
-                .ofNullable(dataFim)
-                .orElse(dataInicio);
+        periodo.dataFim = dataFim;
+        if(!Periodo.isValid(periodo))
+            throw new IllegalArgumentException(ERROR_MESSAGE);
         return periodo;
     }
 
