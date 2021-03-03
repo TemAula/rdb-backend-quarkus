@@ -44,6 +44,11 @@ public class Usuario extends PanacheEntity {
         user.persist();
     }
 
+    public void atualizar(Usuario usuario, String password) {
+        this.username = usuario.username;
+        this.password = password;
+        this.email = usuario.email;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -70,4 +75,6 @@ public class Usuario extends PanacheEntity {
                 ", role='" + role + '\'' +
                 '}';
     }
+
+
 }
