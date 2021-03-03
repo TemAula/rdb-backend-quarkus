@@ -22,14 +22,11 @@ public class UsuarioController {
     }
 
     @POST
-    public Response inserir(Usuario usuario) {
-        service.criar(usuario);
-       return Response.status(Response.Status.CREATED).entity(usuario).build();
+    public Response inserir(UsuarioDTO usuario) {
+       return Response.status(Response.Status.CREATED)
+               .entity(service.criar(usuario)).build();
     }
 
-    public
-
-    //cria usuario
     //edita usuario
     //atualiza usuario
     //remove usuario

@@ -8,8 +8,10 @@ import javax.transaction.Transactional;
 public class UsuarioService {
 
     @Transactional
-    public void criar(Usuario usuario) {
+    public UsuarioDTO criar(UsuarioDTO dto) {
+        Usuario usuario = dto.toUsuario();
         usuario.role = Roles.USER.get();
         usuario.persist();
+        return UsuarioDTO.of(usuario);
     }
 }
