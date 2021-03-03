@@ -9,6 +9,7 @@ import io.quarkus.security.jpa.Username;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
@@ -29,6 +30,10 @@ public class Usuario extends PanacheEntity {
     @Column(length = 32, nullable = false)
     @Roles
     public String role;
+
+    @Email(message = "email inválido")
+    @NotBlank(message = "o campo email nao pode ficar vazio")
+    public String email;
 
     public static void add(String username, String password, String role) {
         Usuario user = new Usuario();
