@@ -1,7 +1,6 @@
 package com.temaula.rdb.security;
 
 import com.github.javafaker.Faker;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Inject;
-import javax.resource.spi.SecurityException;
-
 import java.security.Principal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @QuarkusTest
 class UsuarioServiceTest {
@@ -86,7 +83,7 @@ class UsuarioServiceTest {
         Principal principal = Mockito.mock(Principal.class);
         Mockito.when(principal.getName()).thenReturn(usuarioDTO.username);
         assertThrows(IllegalArgumentException.class,
-                        () -> service.atualizar(newUser.id, newUser, principal));
+                () -> service.atualizar(newUser.id, newUser, principal));
     }
 
     @Test
@@ -162,6 +159,16 @@ class UsuarioServiceTest {
 
     @Test
     public void shouldReturnErrorWhenUserRemoveUser() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
 
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("user");
+
+        Assertions.assertThrows(NotAuthorizedException.class,
+                () -> service.remover(newUser.id, principal));
     }
 }
