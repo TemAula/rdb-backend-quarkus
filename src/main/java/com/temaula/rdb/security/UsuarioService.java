@@ -2,7 +2,6 @@ package com.temaula.rdb.security;
 
 
 import io.quarkus.elytron.security.common.BcryptUtil;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
@@ -14,6 +13,11 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO criar(UsuarioDTO dto) {
+
+        long count = Usuario.find("username", dto.username).count();
+        if (count > 0) {
+            throw new IllegalArgumentException("Username já utilizado");
+        }
         Usuario usuario = dto.toUsuario();
         usuario.role = Roles.USER.get();
         usuario.password = BcryptUtil.bcryptHash(dto.password);

@@ -22,6 +22,17 @@ public class UsuarioDTO {
         return usuario;
     }
 
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
     public static UsuarioDTO of(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.id = usuario.id;
