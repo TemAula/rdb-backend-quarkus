@@ -1,6 +1,7 @@
 package com.temaula.rdb.security;
 
 import com.github.javafaker.Faker;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.resource.spi.SecurityException;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -120,5 +122,46 @@ class UsuarioServiceTest {
         Assertions.assertEquals("update@mail.com", usarioAtualizado.email);
 
     }
-    //pode atualizar se o usario for admin outra pessoa
+
+    @Test
+    public void shouldRemoveUser() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
+
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn(usuarioDTO.username);
+
+        UsuarioDTO dto = service.remover(newUser.id, principal);
+        Assertions.assertNotNull(dto);
+        Optional<Usuario> optional = Usuario.find("username", newUser.username)
+                .singleResultOptional();
+        Assertions.assertFalse(optional.isPresent());
+
+    }
+
+    @Test
+    public void shouldRemoveWhenIsAdmin() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
+
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
+
+        UsuarioDTO dto = service.remover(newUser.id, principal);
+        Assertions.assertNotNull(dto);
+        Optional<Usuario> optional = Usuario.find("username", newUser.username)
+                .singleResultOptional();
+        Assertions.assertFalse(optional.isPresent());
+    }
+
+    @Test
+    public void shouldReturnErrorWhenUserRemoveUser() {
+
+    }
 }
