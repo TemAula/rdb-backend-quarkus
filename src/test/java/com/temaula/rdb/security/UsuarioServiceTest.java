@@ -102,7 +102,23 @@ class UsuarioServiceTest {
         assertThrows(NotAuthorizedException.class,
                 () -> service.atualizar(newUser.id, newUser, principal));
     }
-    //nao pode atualizar se o usuario nao for ele mesmo
-    //pode atualizar se o usuario for ele mesmo
+
+    @Test
+    public void shouldUpdateWhenUserIsAdmin() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
+
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        newUser.password = "password";
+        newUser.email = "update@mail.com";
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
+        UsuarioDTO usarioAtualizado = service.atualizar(newUser.id, newUser, principal);
+        Assertions.assertNotNull(usarioAtualizado);
+        Assertions.assertEquals("update@mail.com", usarioAtualizado.email);
+
+    }
     //pode atualizar se o usario for admin outra pessoa
 }
