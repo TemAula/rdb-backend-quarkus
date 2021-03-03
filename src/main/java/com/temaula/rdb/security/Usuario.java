@@ -9,6 +9,7 @@ import io.quarkus.security.jpa.Username;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -17,10 +18,12 @@ public class Usuario extends PanacheEntity {
 
     @Column(length = 32, nullable = false)
     @Username
+    @NotBlank(message = "usarname nao pode ser vazio")
     public String username;
 
     @Column(nullable = false)
     @Password
+    @NotBlank(message = "password nao pode ser vazio")
     public String password;
 
     @Column(length = 32, nullable = false)
