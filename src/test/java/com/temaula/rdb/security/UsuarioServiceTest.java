@@ -82,7 +82,7 @@ class UsuarioServiceTest {
         newUser.username = "user";
         newUser.password = "password";
         Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn(newUser.username);
+        Mockito.when(principal.getName()).thenReturn(usuarioDTO.username);
         assertThrows(IllegalArgumentException.class,
                         () -> service.atualizar(newUser.id, newUser, principal));
     }
@@ -99,7 +99,7 @@ class UsuarioServiceTest {
         Principal principal = Mockito.mock(Principal.class);
         Mockito.when(principal.getName()).thenReturn("user");
 
-        assertThrows(SecurityException.class,
+        assertThrows(NotAuthorizedException.class,
                 () -> service.atualizar(newUser.id, newUser, principal));
     }
     //nao pode atualizar se o usuario nao for ele mesmo
