@@ -52,8 +52,4 @@ public class UsuarioController {
                 .orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
     }
 
-    //edita usuario
-    //atualiza usuario
-    //remove usuario
-    //exibe usuario
 }
