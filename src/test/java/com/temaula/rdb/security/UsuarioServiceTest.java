@@ -24,7 +24,7 @@ class UsuarioServiceTest {
         UsuarioDTO newUser = service.criar(usuarioDTO);
         Assertions.assertNotNull(newUser.id);
         Assertions.assertEquals(usuarioDTO.email, newUser.email);
-        Assertions.assertNotEquals(usuarioDTO.password, newUser.password);
+        Assertions.assertNull(newUser.password);
         Assertions.assertEquals(usuarioDTO.username, newUser.username);
     }
 }

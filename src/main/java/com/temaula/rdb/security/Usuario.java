@@ -40,6 +40,7 @@ public class Usuario extends PanacheEntity {
         user.username = username;
         user.password = BcryptUtil.bcryptHash(password);
         user.role = role;
+        user.email = "temp@email.com";
         user.persist();
     }
 
