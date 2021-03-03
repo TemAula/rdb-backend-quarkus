@@ -29,4 +29,8 @@ public class UsuarioService {
         Optional<Usuario> usuario = Usuario.find("username", principal.getName()).singleResultOptional();
         return usuario.map(UsuarioDTO::of);
     }
+
+    public UsuarioDTO atualizar(Long id, UsuarioDTO usuario, Principal principal) {
+        return null;
+    }
 }

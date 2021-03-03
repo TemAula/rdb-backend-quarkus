@@ -40,7 +40,8 @@ public class UsuarioController {
     @RolesAllowed({"user", "admin"})
     public UsuarioDTO atualizar(@PathParam("id") Long id, UsuarioDTO usuario,
                                 @Context SecurityContext securityContext) {
-        return null;
+        Principal principal = securityContext.getUserPrincipal();
+        return service.atualizar(id, usuario, principal);
     }
 
     @GET
