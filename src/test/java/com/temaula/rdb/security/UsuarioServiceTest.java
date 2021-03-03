@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import javax.inject.Inject;
+import javax.resource.spi.SecurityException;
 
 import java.security.Principal;
 
@@ -84,10 +85,24 @@ class UsuarioServiceTest {
         Mockito.when(principal.getName()).thenReturn(newUser.username);
         assertThrows(IllegalArgumentException.class,
                         () -> service.atualizar(newUser.id, newUser, principal));
+    }
 
+    @Test
+    public void shouldReturnErrorWhenUserUpdateAnotherUser() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
+
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        newUser.password = "password";
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("user");
+
+        assertThrows(SecurityException.class,
+                () -> service.atualizar(newUser.id, newUser, principal));
     }
     //nao pode atualizar se o usuario nao for ele mesmo
-    //nao pode atualizar caso o username ja tenha outro usuario
     //pode atualizar se o usuario for ele mesmo
     //pode atualizar se o usario for admin outra pessoa
 }

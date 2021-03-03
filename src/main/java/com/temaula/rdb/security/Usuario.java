@@ -13,6 +13,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+import static com.temaula.rdb.security.Roles.ADMIN;
+
 @Entity
 @UserDefinition
 public class Usuario extends PanacheEntity {
@@ -50,6 +52,18 @@ public class Usuario extends PanacheEntity {
         this.email = usuario.email;
     }
 
+    public boolean isAdmin() {
+        return this.role.contains(ADMIN.get());
+    }
+
+    public boolean isNotAdmin() {
+        return !isAdmin();
+    }
+
+    public boolean outroUsername(Usuario usuario) {
+        return !this.username.equals(usuario.username);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -75,6 +89,5 @@ public class Usuario extends PanacheEntity {
                 ", role='" + role + '\'' +
                 '}';
     }
-
 
 }
