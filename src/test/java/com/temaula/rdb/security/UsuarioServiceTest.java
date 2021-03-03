@@ -32,7 +32,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@meil.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         Assertions.assertNotNull(newUser.id);
@@ -46,7 +46,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@meil.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
         service.criar(usuarioDTO);
         assertThrows(IllegalArgumentException.class, () -> service.criar(usuarioDTO));
     }
@@ -56,7 +56,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         newUser.email = "update@mail.com";
@@ -75,7 +75,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         newUser.username = "user";
@@ -91,7 +91,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         newUser.password = "password";
@@ -107,7 +107,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         newUser.password = "password";
@@ -125,7 +125,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         Principal principal = Mockito.mock(Principal.class);
@@ -144,7 +144,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         Principal principal = Mockito.mock(Principal.class);
@@ -162,7 +162,7 @@ class UsuarioServiceTest {
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.email = "my@mail.com";
         usuarioDTO.password = "password";
-        usuarioDTO.username = faker.dragonBall().character();
+        usuarioDTO.username = faker.name().username();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
         Principal principal = Mockito.mock(Principal.class);
