@@ -17,8 +17,7 @@ public class UsuarioService {
     @Transactional
     public UsuarioDTO criar(UsuarioDTO dto) {
 
-        long count = Usuario.find("username", dto.username).count();
-        if (count > 0) {
+        if (jaExisteUsuario(dto.username)) {
             throw new IllegalArgumentException("Username já utilizado");
         }
         Usuario usuario = dto.toUsuario();
@@ -38,8 +37,17 @@ public class UsuarioService {
         Usuario usuario = Usuario
                 .<Usuario>findByIdOptional(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario nao encontrado com o Id " + id));
+
+        if (!usuario.username.equals(dto.username) && jaExisteUsuario(dto.username)) {
+            throw new IllegalArgumentException("Username já utilizado");
+        }
         usuario.atualizar(dto.toUsuario(), BcryptUtil.bcryptHash(dto.password));
         usuario.persist();
         return UsuarioDTO.of(usuario);
+    }
+
+    private boolean jaExisteUsuario(String username) {
+        long count = Usuario.find("username", username).count();
+        return count > 0;
     }
 }

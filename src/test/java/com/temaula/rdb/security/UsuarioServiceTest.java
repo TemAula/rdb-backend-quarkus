@@ -48,7 +48,7 @@ class UsuarioServiceTest {
         usuarioDTO.password = "password";
         usuarioDTO.username = faker.dragonBall().character();
         service.criar(usuarioDTO);
-        Assertions.assertThrows(IllegalArgumentException.class, () -> service.criar(usuarioDTO));
+        assertThrows(IllegalArgumentException.class, () -> service.criar(usuarioDTO));
     }
 
     @Test
@@ -59,7 +59,8 @@ class UsuarioServiceTest {
         usuarioDTO.username = faker.dragonBall().character();
 
         UsuarioDTO newUser = service.criar(usuarioDTO);
-        newUser.username = "update@mail.com";
+        newUser.email = "update@mail.com";
+        newUser.password = "password";
         Principal principal = Mockito.mock(Principal.class);
         Mockito.when(principal.getName()).thenReturn(newUser.username);
         UsuarioDTO usarioAtualizado = service.atualizar(newUser.id, newUser, principal);
@@ -68,7 +69,24 @@ class UsuarioServiceTest {
         Assertions.assertEquals("update@mail.com", usarioAtualizado.email);
 
     }
-    //nao pode atualizar se o usuario no for ele mesmo
+
+    @Test
+    public void shouldNotUpdateUserNameWhenItTaken() {
+        UsuarioDTO usuarioDTO = new UsuarioDTO();
+        usuarioDTO.email = "my@mail.com";
+        usuarioDTO.password = "password";
+        usuarioDTO.username = faker.dragonBall().character();
+
+        UsuarioDTO newUser = service.criar(usuarioDTO);
+        newUser.username = "user";
+        newUser.password = "password";
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn(newUser.username);
+        assertThrows(IllegalArgumentException.class,
+                        () -> service.atualizar(newUser.id, newUser, principal));
+
+    }
+    //nao pode atualizar se o usuario nao for ele mesmo
     //nao pode atualizar caso o username ja tenha outro usuario
     //pode atualizar se o usuario for ele mesmo
     //pode atualizar se o usario for admin outra pessoa
