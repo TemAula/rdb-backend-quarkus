@@ -15,7 +15,7 @@ class UsuarioControllerTest {
 
     @Test
     public void shouldReturnUser() {
-        String entity = given()
+        UsuarioDTO usuario = given()
                 .auth()
                 .basic("user", "user")
                 .contentType(ContentType.JSON)
@@ -24,7 +24,26 @@ class UsuarioControllerTest {
                 .then()
                 .statusCode(OK.getStatusCode())
                 .extract()
-                .as(String.class);
-        Assertions.assertNotNull(entity);
+                .as(UsuarioDTO.class);
+        Assertions.assertNotNull(usuario);
+        Assertions.assertEquals("user", usuario.username);
+        Assertions.assertEquals("user", usuario.role);
+    }
+
+    @Test
+    public void shouldReturnAdmin() {
+        UsuarioDTO usuario = given()
+                .auth()
+                .basic("admin", "admin")
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/usuarios/me")
+                .then()
+                .statusCode(OK.getStatusCode())
+                .extract()
+                .as(UsuarioDTO.class);
+        Assertions.assertNotNull(usuario);
+        Assertions.assertEquals("admin", usuario.username);
+        Assertions.assertEquals("admin", usuario.role);
     }
 }
