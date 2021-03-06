@@ -1,6 +1,7 @@
 package com.temaula.rdb;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,11 @@ public class AdicionarEventoResourceTest {
     @DisplayName("POST /eventos -> deve retornar 200 e retornar o evento persistido")
     @MethodSource("deveRetornar200Args")
     public void deveRetornar200(final String desc, final Map<?, ?> body) {
-        given()
+        adicionarEvento(body);
+    }
+
+    private static EventoRegistrado adicionarEvento(Map<?, ?> body) {
+        return given()
                 .log().ifValidationFails()
                 .when()
                 .contentType(ContentType.JSON)
@@ -57,7 +62,10 @@ public class AdicionarEventoResourceTest {
                 .body("periodoVigencia.dataFim", is(Optional.of(body.get("periodoVigencia"))
                         .map(Map.class::cast)
                         .get()
-                        .get("dataFim")));
+                        .get("dataFim")))
+                .extract()
+                .as(new TypeRef<EventoRegistrado>() {
+                });
     }
 
     private static Stream<Arguments> deveRetornar200Args() {
@@ -96,6 +104,10 @@ public class AdicionarEventoResourceTest {
                         )
                 )
         );
+    }
+
+    public static EventoRegistrado pegarEventoRegistradoValido() {
+        return adicionarEvento((Map<?, ?>) deveRetornar200Args().findFirst().get().get()[1]);
     }
 
     @ParameterizedTest(name = "{0}")

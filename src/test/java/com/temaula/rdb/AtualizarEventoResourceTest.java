@@ -3,7 +3,6 @@ package com.temaula.rdb;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,31 +10,17 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.matchesRegex;
 
 @QuarkusTest
 public class AtualizarEventoResourceTest {
-
-    private static Long eventId;
-
-    @Transactional
-    @BeforeAll
-    public static void persistirEventoParaAtualizacao() {
-
-        final var novoEvento = new Evento();
-        novoEvento.nome = UUID.randomUUID().toString();
-        novoEvento.descricao = UUID.randomUUID().toString();
-        novoEvento.periodoVigencia = Periodo.of(LocalDate.now(), LocalDate.now().plusDays(1));
-        novoEvento.persist();
-        eventId = novoEvento.id;
-    }
 
     @Transactional
     @AfterAll
@@ -47,6 +32,7 @@ public class AtualizarEventoResourceTest {
     @DisplayName("PUT /eventos/{id} -> deve retornar 200 e retornar o evento atualizado")
     @MethodSource("deveRetornar200Args")
     public void deveRetornar200(final String desc, final Map<?, ?> body) {
+        var eventId = AdicionarEventoResourceTest.pegarEventoRegistradoValido().id;
         given()
                 .log().ifValidationFails()
                 .when()
@@ -112,6 +98,7 @@ public class AtualizarEventoResourceTest {
     @MethodSource("deveRetornar400Args")
     public void deveRetornar400(final String desc,
                                 final Map<?, ?> body) throws InterruptedException {
+        var eventId = AdicionarEventoResourceTest.pegarEventoRegistradoValido().id;
         given()
                 .log().ifValidationFails()
                 .when()
@@ -166,12 +153,13 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "periodoVigencia", Map.of( "dataFim", "2021-02-28")
+                                "periodoVigencia", Map.of("dataFim", "2021-02-28")
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando periodoDeVigencia.dataInicio não seguir o padrão ISO 8601 ( YYYY-MM-DD ), pois ela é requirida",
+                        "quando periodoDeVigencia.dataInicio não seguir o padrão ISO 8601 ( YYYY-MM-DD ), pois ela é " +
+                                "requirida",
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
@@ -184,16 +172,17 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28")
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28")
                         )
 
                 ),
                 Arguments.arguments(
-                        "quando periodoDeVigencia.dataFim for fornecida mas não seguir o padrão ISO 8601 ( YYYY-MM-DD )",
+                        "quando periodoDeVigencia.dataFim for fornecida mas não seguir o padrão ISO 8601 ( YYYY-MM-DD" +
+                                " )",
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","20210228")
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "20210228")
                         )
 
                 ),
@@ -202,7 +191,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(401),
-                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","2021-02-28")
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-02-28")
                         )
 
                 ),
@@ -211,7 +200,7 @@ public class AtualizarEventoResourceTest {
                         Map.of(
                                 "nome", "Sopão",
                                 "descricao", "d".repeat(400),
-                                "periodoVigencia", Map.of( "dataInicio", "2021-01-28","dataFim","2021-01-27")
+                                "periodoVigencia", Map.of("dataInicio", "2021-01-28", "dataFim", "2021-01-27")
                         )
 
                 )

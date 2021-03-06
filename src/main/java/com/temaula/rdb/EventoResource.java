@@ -26,7 +26,7 @@ public class EventoResource {
     @Produces(value = MediaType.APPLICATION_JSON)
     @Transactional
     public Response atualizar(@PathParam("id") Long id,
-                                    @Valid Evento evento) {
+                              @Valid Evento evento) {
         Optional<Evento> eventoLocalizado = Evento.findByIdOptional(id);
         Evento eventoRegistrado =
                 eventoLocalizado.orElseThrow(() -> new WebApplicationException(Response.Status.NOT_FOUND));
@@ -61,8 +61,9 @@ public class EventoResource {
     @Path("/{id}")
     @Transactional
     public Response deletar(@PathParam("id") Long id) {
-        Evento.deleteById(id);
-        return Response.status(Response.Status.ACCEPTED).build();
+        if (Evento.deleteById(id))
+            return Response.status(Response.Status.ACCEPTED).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }
