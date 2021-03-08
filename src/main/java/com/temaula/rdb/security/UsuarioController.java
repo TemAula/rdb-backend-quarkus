@@ -30,7 +30,7 @@ public class UsuarioController {
     }
 
     @POST
-    public Response inserir(UsuarioDTO usuario) {
+    public Response criar(UsuarioDTO usuario) {
        return Response.status(Response.Status.CREATED)
                .entity(service.criar(usuario)).build();
     }
