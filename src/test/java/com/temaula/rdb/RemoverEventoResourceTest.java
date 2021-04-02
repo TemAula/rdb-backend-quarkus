@@ -24,7 +24,7 @@ public class RemoverEventoResourceTest {
     @Transactional
     @AfterAll
     public static void removerEventos() {
-        Evento.deleteAll();
+        Evento.removerTodos();
     }
 
     @Test

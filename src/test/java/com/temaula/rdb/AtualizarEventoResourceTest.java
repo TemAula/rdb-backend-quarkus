@@ -25,7 +25,7 @@ public class AtualizarEventoResourceTest {
     @Transactional
     @AfterAll
     public static void removerEventos() {
-        Evento.deleteAll();
+        Evento.removerTodos();
     }
 
     @ParameterizedTest(name = "{0}")

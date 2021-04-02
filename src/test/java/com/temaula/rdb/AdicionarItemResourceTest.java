@@ -25,13 +25,13 @@ public class AdicionarItemResourceTest {
     @BeforeEach
     @Transactional
     public void beforeEach(){
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @AfterEach
     @Transactional
     public void afterEach(){
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @ParameterizedTest(name = "{0}")

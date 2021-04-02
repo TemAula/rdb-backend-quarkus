@@ -23,7 +23,7 @@ public class ListarItemResourceTest {
     @AfterEach
     @Transactional
     public void removerTodosOsItens() {
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @BeforeEach
@@ -34,7 +34,7 @@ public class ListarItemResourceTest {
     @Transactional
     protected Item adicionarItem() {
         return Item
-            .create(
+            .criarItem(
                 faker.book().title(),
                 BigDecimal.valueOf(faker.number().randomDouble(2, 0, 100))
             );

@@ -27,7 +27,7 @@ public class AdicionarEventoResourceTest {
     @BeforeEach
     @AfterEach
     public void removerEventos() {
-        Evento.deleteAll();
+        Evento.removerTodos();
     }
 
     @ParameterizedTest(name = "{0}")

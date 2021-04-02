@@ -23,7 +23,7 @@ public class CarregarItemResourceTest {
     @AfterEach
     @Transactional
     public void removerTodosOsItens() {
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @BeforeEach
@@ -32,7 +32,7 @@ public class CarregarItemResourceTest {
         faker = new Faker();
         Item.deleteAll();
         itemRegistrado = Item
-            .create(
+            .criarItem(
                 faker.book().title(),
                 BigDecimal.valueOf(faker.number().randomDouble(2, 0, 100))
             );
