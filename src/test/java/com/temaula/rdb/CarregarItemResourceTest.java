@@ -8,11 +8,12 @@ import java.util.Map;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @QuarkusTest
 public class CarregarItemResourceTest {
@@ -53,17 +54,17 @@ public class CarregarItemResourceTest {
     @Test
     @DisplayName("GET /itens/{id} -> deve retornar 200 e retornar o item registrado")
     public void deveRetornar200() {
-        Assertions.assertEquals(
-            itemRegistrado,
-            given()
-                .log().ifValidationFails()
-                .when()
-                .accept(ContentType.JSON)
-                .get("/itens/{id}", Map.of("id", itemRegistrado.id))
-                .then()
-                .statusCode(Status.OK.getStatusCode())
-                .extract()
-                .as(Item.class)
-        );
+
+        Item itemLocalizado = given()
+            .log().ifValidationFails()
+            .when()
+            .accept(ContentType.JSON)
+            .get("/itens/{id}", Map.of("id", itemRegistrado.id))
+            .then()
+            .statusCode(Status.OK.getStatusCode())
+            .extract()
+            .as(Item.class);
+
+        assertThat(itemLocalizado, equalTo(itemRegistrado));
     }
 }
