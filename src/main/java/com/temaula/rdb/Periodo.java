@@ -20,9 +20,9 @@ public class Periodo {
 
     static final String ERROR_MESSAGE = "período inválido";
 
-    @NotNull
+    @NotNull(message = "data de início não pode ser nula")
     public LocalDate dataInicio;
-    @NotNull
+    @NotNull(message = "data final não pode ser nula")
     public LocalDate dataFim;
 
     public static Periodo of(LocalDate dataInicio, LocalDate dataFim) {
