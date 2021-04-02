@@ -20,15 +20,15 @@ import java.util.stream.Stream;
 @Entity
 public class Evento extends PanacheEntity {
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "nome não pode ser nulo")
+    @NotBlank(message = "nome não pode estar em branco")
     public String nome;
     @Lob
     @Column(length = 400)
-    @Size(max = 400)
+    @Size(max = 400, message = "descrição deve ter no máximo 400 caracteres")
     public String descricao;
 
-    @NotNull
+    @NotNull(message = "período de vigência não pode ser nulo")
     @Valid
     public Periodo periodoVigencia;
 
@@ -40,7 +40,7 @@ public class Evento extends PanacheEntity {
     /**
      * Atualiza os valores do evento a partir de um outro {@link Evento}
      *
-     * @param evento
+     * @param evento Evento para atualização
      *
      * @throws NullPointerException caso evento informado for nulo
      */
