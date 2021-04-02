@@ -27,7 +27,7 @@ public class ListarItemResourceTest {
     }
 
     @BeforeEach
-    public void afterEach() {
+    public void beforeEach() {
         faker = new Faker();
     }
 
