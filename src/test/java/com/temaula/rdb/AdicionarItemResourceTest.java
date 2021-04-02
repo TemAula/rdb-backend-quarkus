@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,7 @@ public class AdicionarItemResourceTest {
         Item.deleteAll();
     }
 
-    @BeforeEach
+    @AfterEach
     @Transactional
     public void afterEach(){
         Item.deleteAll();
