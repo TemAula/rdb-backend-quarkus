@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Item extends PanacheEntity {
+
     public static Item create(final String descricao, final BigDecimal valorReferencia) {
         Item item = new Item();
         item.descricao = descricao;
