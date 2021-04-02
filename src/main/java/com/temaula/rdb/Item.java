@@ -26,6 +26,12 @@ public class Item extends PanacheEntity {
     @DecimalMin(value = "0.00", message = "o valor de referência deve ser maior ou igual à ZERO")
     public BigDecimal valorReferencia;
 
+    public void editar(final Item item) {
+        this.descricao=item.descricao;
+        this.valorReferencia=item.valorReferencia;
+        this.persist();
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -45,4 +51,5 @@ public class Item extends PanacheEntity {
     public int hashCode() {
         return Objects.hash(id, descricao, valorReferencia);
     }
+
 }
