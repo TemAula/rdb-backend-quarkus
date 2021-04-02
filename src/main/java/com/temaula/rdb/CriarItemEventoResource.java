@@ -24,7 +24,7 @@ public class CriarItemEventoResource {
                 .map(Item.class::cast)
                 .orElseThrow(NotFoundException::new);
 
-        return ItemEvento.create(evento,itemParaRelacionar).item;
+        return ItemEvento.criarItemEvento(evento,itemParaRelacionar).item;
 
     }
 

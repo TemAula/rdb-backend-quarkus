@@ -2,15 +2,17 @@ package com.temaula.rdb;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @Entity
 public class ItemEvento extends PanacheEntityBase {
 
-    public static ItemEvento create(Evento evento, Item item) {
+    public static ItemEvento criarItemEvento(Evento evento, Item item) {
 
         Optional<ItemEvento> itemEventoRef = ItemEvento.findByEventoAndItem(evento, item);
         if (itemEventoRef.isPresent()) {
