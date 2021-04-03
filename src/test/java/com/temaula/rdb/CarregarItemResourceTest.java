@@ -7,13 +7,12 @@ import java.math.BigDecimal;
 import java.util.Map;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response.Status;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.*;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
 public class CarregarItemResourceTest {
@@ -23,7 +22,7 @@ public class CarregarItemResourceTest {
     @AfterEach
     @Transactional
     public void removerTodosOsItens() {
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @BeforeEach
@@ -32,7 +31,7 @@ public class CarregarItemResourceTest {
         faker = new Faker();
         Item.deleteAll();
         itemRegistrado = Item
-            .create(
+            .criarItem(
                 faker.book().title(),
                 BigDecimal.valueOf(faker.number().randomDouble(2, 0, 100))
             );

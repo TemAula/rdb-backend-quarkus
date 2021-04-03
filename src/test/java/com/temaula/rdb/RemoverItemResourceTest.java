@@ -22,9 +22,9 @@ public class RemoverItemResourceTest {
     @Transactional
     @BeforeAll
     public static void setup() {
-        Item.deleteAll();
+        Item.removerTodos();
         faker = new Faker();
-        itemRegistrado = Item.create(
+        itemRegistrado = Item.criarItem(
             faker.book().title(),
             BigDecimal.valueOf(faker.number().randomDouble(2, 0, 1000))
         );
@@ -33,7 +33,7 @@ public class RemoverItemResourceTest {
     @Transactional
     @AfterAll
     public static void removerItens() {
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @Test

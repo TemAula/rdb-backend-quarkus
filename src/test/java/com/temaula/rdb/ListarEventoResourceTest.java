@@ -30,7 +30,7 @@ public class ListarEventoResourceTest {
     @BeforeAll
     @AfterAll
     public static void removerEventos() {
-        Evento.deleteAll();
+        Evento.removerTodos();
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.temaula.rdb;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Item extends PanacheEntity {
 
-    public static Item create(final String descricao, final BigDecimal valorReferencia) {
+    public static Item criarItem(final String descricao, final BigDecimal valorReferencia) {
         Item item = new Item();
         item.descricao = descricao;
         item.valorReferencia = valorReferencia;
@@ -27,8 +28,8 @@ public class Item extends PanacheEntity {
     public BigDecimal valorReferencia;
 
     public void editar(final Item item) {
-        this.descricao=item.descricao;
-        this.valorReferencia=item.valorReferencia;
+        this.descricao = item.descricao;
+        this.valorReferencia = item.valorReferencia;
         this.persist();
     }
 
@@ -41,10 +42,9 @@ public class Item extends PanacheEntity {
             return false;
         }
         final Item item = (Item) o;
-        return
-            Objects.equals(id, item.id) &&
-                Objects.equals(descricao, item.descricao) &&
-                Objects.equals(valorReferencia, item.valorReferencia);
+
+        return Objects.equals(id, item.id);
+
     }
 
     @Override
@@ -52,4 +52,14 @@ public class Item extends PanacheEntity {
         return Objects.hash(id, descricao, valorReferencia);
     }
 
+    @Override
+    public void delete() {
+        ItemEvento.deleteByItem(this);
+        super.delete();
+    }
+
+    public static void removerTodos() {
+        ItemEvento.deleteAll();
+        Item.deleteAll();
+    }
 }

@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.awt.event.ItemEvent;
 import java.nio.channels.FileChannel;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,15 @@ import java.util.stream.Stream;
 
 @Entity
 public class Evento extends PanacheEntity {
+
+    public static Evento criarEvento(String nome, String descricao, Periodo periodoVigencia) {
+        Evento evento = new Evento();
+        evento.nome = nome;
+        evento.descricao = descricao;
+        evento.periodoVigencia = periodoVigencia;
+        evento.persist();
+        return evento;
+    }
 
     @NotNull(message = "nome não pode ser nulo")
     @NotBlank(message = "nome não pode estar em branco")
@@ -49,5 +59,16 @@ public class Evento extends PanacheEntity {
         this.nome = evento.nome;
         this.descricao = evento.descricao;
         this.periodoVigencia = evento.periodoVigencia;
+    }
+
+    @Override
+    public void delete() {
+        ItemEvento.deleteByEvento(this);
+        super.delete();
+    }
+
+    public static void removerTodos() {
+        ItemEvento.deleteAll();
+        Evento.deleteAll();
     }
 }

@@ -27,9 +27,9 @@ public class EditarItemResourceTest {
     @BeforeEach
     @Transactional
     public void beforeEach() {
-        Item.deleteAll();
+        Item.removerTodos();
         itemRegistrado = Item
-            .create(
+            .criarItem(
                 faker.book().title(),
                 BigDecimal.valueOf(faker.number().randomDouble(2, 0, 100))
             );
@@ -38,7 +38,7 @@ public class EditarItemResourceTest {
     @AfterEach
     @Transactional
     public void afterEach() {
-        Item.deleteAll();
+        Item.removerTodos();
     }
 
     @ParameterizedTest(name = "{0}")
