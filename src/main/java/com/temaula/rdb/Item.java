@@ -43,9 +43,16 @@ public class Item extends PanacheEntity {
         }
         final Item item = (Item) o;
 
-        if (!this.isPersistent() == item.isPersistent())
+        if (this.isPersistent() != item.isPersistent()) {
             return false;
-        return Objects.equals(id, item.id);
+        }
+
+        if (this.isPersistent() && item.isPersistent()) {
+            return Objects.equals(id, item.id);
+        }
+
+        return Objects.equals(descricao, item.descricao) &&
+                Objects.equals(valorReferencia, item.valorReferencia);
     }
 
     @Override
