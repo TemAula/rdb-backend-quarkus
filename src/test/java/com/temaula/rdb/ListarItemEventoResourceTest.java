@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
-class ListarItemEventoResourceTest {
+public class ListarItemEventoResourceTest {
 
     Faker faker;
 
@@ -65,7 +65,7 @@ class ListarItemEventoResourceTest {
         final var items = listarItemEventos(evento);
 
         assertThat(items, hasSize(3));
-        assertThat(items, containsInAnyOrder(item1, item2, item3));
+        assertThat(items, contains(item1, item2, item3));
     }
 
     private List<Item> listarItemEventos(Evento evento) {

@@ -42,10 +42,10 @@ public class Item extends PanacheEntity {
             return false;
         }
         final Item item = (Item) o;
-        return
-                Objects.equals(id, item.id) &&
-                        Objects.equals(descricao, item.descricao) &&
-                        Objects.equals(valorReferencia, item.valorReferencia);
+
+        if (!this.isPersistent() == item.isPersistent())
+            return false;
+        return Objects.equals(id, item.id);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Item extends PanacheEntity {
         super.delete();
     }
 
-    public static void removerTodos(){
+    public static void removerTodos() {
         ItemEvento.deleteAll();
         Item.deleteAll();
     }
